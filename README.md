@@ -69,6 +69,7 @@ cargo run -- ../json/algebra/scalar_tests.json -- -t basic
 ### Test Results
 
 Current test success rates:
+
 - **Scalar tests**: 100% (4/4 tests passing) in both C++ and Rust
 - **Vector tests**: 80% (4/5 tests passing) in C++, 60% (3/5 tests passing) in Rust
 - **Multivector tests**: 43% (3/7 tests passing) in C++, pattern matching in progress for Rust
