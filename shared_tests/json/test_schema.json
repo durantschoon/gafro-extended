@@ -1,0 +1,126 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "GAFRO Cross-Language Test Specification",
+    "description": "Schema for cross-language geometric algebra test specifications",
+    "type": "object",
+    "properties": {
+        "test_suite": {
+            "type": "string",
+            "description": "Name of the test suite"
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the test specification format"
+        },
+        "description": {
+            "type": "string",
+            "description": "Description of the test suite"
+        },
+        "test_categories": {
+            "type": "object",
+            "description": "Categories of tests organized by functionality",
+            "patternProperties": {
+                ".*": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/test_case"
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "test_suite",
+        "version",
+        "test_categories"
+    ],
+    "definitions": {
+        "test_case": {
+            "type": "object",
+            "properties": {
+                "test_name": {
+                    "type": "string",
+                    "description": "Unique name for the test case"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable description of what the test does"
+                },
+                "category": {
+                    "type": "string",
+                    "description": "Category this test belongs to"
+                },
+                "inputs": {
+                    "type": "object",
+                    "description": "Input parameters for the test"
+                },
+                "expected_outputs": {
+                    "type": "object",
+                    "description": "Expected output values"
+                },
+                "tolerance": {
+                    "type": "number",
+                    "description": "Numerical tolerance for floating-point comparisons",
+                    "default": 1e-10
+                },
+                "language_specific": {
+                    "type": "object",
+                    "description": "Language-specific test code and configurations",
+                    "properties": {
+                        "cpp": {
+                            "$ref": "#/definitions/language_config"
+                        },
+                        "rust": {
+                            "$ref": "#/definitions/language_config"
+                        }
+                    }
+                },
+                "dependencies": {
+                    "type": "array",
+                    "description": "Other test cases this test depends on",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "description": "Tags for categorizing and filtering tests",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "test_name",
+                "description",
+                "category",
+                "inputs",
+                "expected_outputs"
+            ]
+        },
+        "language_config": {
+            "type": "object",
+            "properties": {
+                "test_code": {
+                    "type": "string",
+                    "description": "Language-specific test code snippet"
+                },
+                "includes": {
+                    "type": "array",
+                    "description": "Header files or modules to include",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "setup_code": {
+                    "type": "string",
+                    "description": "Setup code to run before the test"
+                },
+                "cleanup_code": {
+                    "type": "string",
+                    "description": "Cleanup code to run after the test"
+                }
+            }
+        }
+    }
+}

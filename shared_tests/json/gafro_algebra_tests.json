@@ -1,0 +1,15 @@
+{
+    "test_suite": "gafro_algebra_tests",
+    "version": "1.0",
+    "description": "Cross-language test specifications for GAFRO geometric algebra operations",
+    "test_categories": {
+        "scalar_tests": [],
+        "vector_tests": [],
+        "multivector_tests": [],
+        "motor_tests": [],
+        "rotor_tests": [],
+        "point_tests": [],
+        "plane_tests": [],
+        "cross_language_consistency": []
+    }
+}

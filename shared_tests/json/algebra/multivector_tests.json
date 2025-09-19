@@ -1,0 +1,289 @@
+{
+    "test_suite": "multivector_tests",
+    "version": "1.0",
+    "description": "Multivector operations and properties",
+    "test_categories": {
+        "multivector_properties": [
+            {
+                "test_name": "multivector_size",
+                "description": "Test multivector size property",
+                "category": "multivector_properties",
+                "inputs": {
+                    "blades": [
+                        "e1",
+                        "e2",
+                        "e3"
+                    ]
+                },
+                "expected_outputs": {
+                    "size": 3
+                },
+                "tolerance": 0,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "auto size = gafro::Multivector<double, blades::e1, blades::e2, blades::e3>::size;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let size = Multivector::<f64>::size();",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "properties",
+                    "size"
+                ]
+            },
+            {
+                "test_name": "multivector_blades",
+                "description": "Test multivector blade access",
+                "category": "multivector_properties",
+                "inputs": {
+                    "blades": [
+                        "e1",
+                        "e2",
+                        "e3"
+                    ]
+                },
+                "expected_outputs": {
+                    "blade_0": 1,
+                    "blade_1": 2,
+                    "blade_2": 4
+                },
+                "tolerance": 0,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "auto bits = gafro::Multivector<double, blades::e1, blades::e2, blades::e3>::bits(); auto blade_array = bits.blades();",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let bits = Multivector::<f64>::bits(); let blade_array = bits.blades();",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "properties",
+                    "blades"
+                ]
+            }
+        ],
+        "multivector_creation": [
+            {
+                "test_name": "multivector_default_creation",
+                "description": "Test default multivector creation (should be zero)",
+                "category": "multivector_creation",
+                "inputs": {
+                    "blades": [
+                        "e0",
+                        "e1",
+                        "e2",
+                        "e3",
+                        "ei"
+                    ]
+                },
+                "expected_outputs": {
+                    "e0": 0.0,
+                    "e1": 0.0,
+                    "e2": 0.0,
+                    "e3": 0.0,
+                    "ei": 0.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> mv;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mv = Multivector::<f64>::new();",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "basic",
+                    "creation"
+                ]
+            },
+            {
+                "test_name": "multivector_creation_with_values",
+                "description": "Test multivector creation with specific values",
+                "category": "multivector_creation",
+                "inputs": {
+                    "values": [
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0
+                    ]
+                },
+                "expected_outputs": {
+                    "e0": 1.0,
+                    "e1": 2.0,
+                    "e2": 3.0,
+                    "e3": 4.0,
+                    "ei": 5.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> mv({1.0, 2.0, 3.0, 4.0, 5.0});",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mv = Multivector::<f64>::new(vec![1.0, 2.0, 3.0, 4.0, 5.0]);",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "basic",
+                    "creation"
+                ]
+            }
+        ],
+        "multivector_operations": [
+            {
+                "test_name": "multivector_addition",
+                "description": "Test multivector addition operation",
+                "category": "multivector_operations",
+                "inputs": {
+                    "mv1_values": [
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0
+                    ],
+                    "mv2_values": [
+                        10.0,
+                        20.0,
+                        30.0,
+                        40.0,
+                        50.0
+                    ]
+                },
+                "expected_outputs": {
+                    "e0": 11.0,
+                    "e1": 22.0,
+                    "e2": 33.0,
+                    "e3": 44.0,
+                    "ei": 55.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "typedef gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> MV; MV mv1({1.0, 2.0, 3.0, 4.0, 5.0}); MV mv2({10.0, 20.0, 30.0, 40.0, 50.0}); mv1 += mv2;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mut mv1 = Multivector::<f64>::new(vec![1.0, 2.0, 3.0, 4.0, 5.0]); let mv2 = Multivector::<f64>::new(vec![10.0, 20.0, 30.0, 40.0, 50.0]); mv1 += mv2;",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "arithmetic",
+                    "addition"
+                ]
+            },
+            {
+                "test_name": "multivector_scalar_multiplication",
+                "description": "Test multivector multiplication by scalar",
+                "category": "multivector_operations",
+                "inputs": {
+                    "mv_values": [
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0
+                    ],
+                    "scalar": 2.0
+                },
+                "expected_outputs": {
+                    "e0": 2.0,
+                    "e1": 4.0,
+                    "e2": 6.0,
+                    "e3": 8.0,
+                    "ei": 10.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> mv({1.0, 2.0, 3.0, 4.0, 5.0}); mv *= 2.0;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mut mv = Multivector::<f64>::new(vec![1.0, 2.0, 3.0, 4.0, 5.0]); mv *= 2.0;",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "arithmetic",
+                    "multiplication"
+                ]
+            }
+        ],
+        "multivector_properties_advanced": [
+            {
+                "test_name": "multivector_norm",
+                "description": "Test multivector norm calculation",
+                "category": "multivector_properties_advanced",
+                "inputs": {
+                    "mv_values": [
+                        5.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0
+                    ]
+                },
+                "expected_outputs": {
+                    "norm": 5.0990195136
+                },
+                "tolerance": 1e-8,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> mv({5.0, 1.0, 2.0, 3.0, 4.0}); auto norm = mv.norm();",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mv = Multivector::<f64>::new(vec![5.0, 1.0, 2.0, 3.0, 4.0]); let norm = mv.norm();",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "properties",
+                    "norm"
+                ]
+            }
+        ]
+    }
+}

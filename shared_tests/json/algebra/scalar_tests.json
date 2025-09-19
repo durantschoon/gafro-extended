@@ -1,0 +1,131 @@
+{
+    "test_suite": "scalar_tests",
+    "version": "1.0",
+    "description": "Basic scalar operations and properties",
+    "test_categories": {
+        "scalar_creation": [
+            {
+                "test_name": "scalar_default_creation",
+                "description": "Test default scalar creation (should be zero)",
+                "category": "scalar_creation",
+                "inputs": {},
+                "expected_outputs": {
+                    "value": 0.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Scalar<double> scalar;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let scalar = Scalar::<f64>::new();",
+                        "includes": [
+                            "gafro::scalar"
+                        ]
+                    }
+                },
+                "tags": [
+                    "basic",
+                    "creation"
+                ]
+            },
+            {
+                "test_name": "scalar_creation_with_value",
+                "description": "Test scalar creation with specific value",
+                "category": "scalar_creation",
+                "inputs": {
+                    "value": 3.14
+                },
+                "expected_outputs": {
+                    "value": 3.14
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Scalar<double> scalar(3.14);",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let scalar = Scalar::<f64>::new(3.14);",
+                        "includes": [
+                            "gafro::scalar"
+                        ]
+                    }
+                },
+                "tags": [
+                    "basic",
+                    "creation"
+                ]
+            }
+        ],
+        "scalar_arithmetic": [
+            {
+                "test_name": "scalar_addition",
+                "description": "Test scalar addition operation",
+                "category": "scalar_arithmetic",
+                "inputs": {
+                    "a": 2.5,
+                    "b": 1.5
+                },
+                "expected_outputs": {
+                    "result": 4.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Scalar<double> a(2.5); Scalar<double> b(1.5); auto result = a + b;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let a = Scalar::<f64>::new(2.5); let b = Scalar::<f64>::new(1.5); let result = a + b;",
+                        "includes": [
+                            "gafro::scalar"
+                        ]
+                    }
+                },
+                "tags": [
+                    "arithmetic",
+                    "addition"
+                ]
+            },
+            {
+                "test_name": "scalar_multiplication",
+                "description": "Test scalar multiplication operation",
+                "category": "scalar_arithmetic",
+                "inputs": {
+                    "a": 3.0,
+                    "b": 2.0
+                },
+                "expected_outputs": {
+                    "result": 6.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Scalar<double> a(3.0); Scalar<double> b(2.0); auto result = a * b;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let a = Scalar::<f64>::new(3.0); let b = Scalar::<f64>::new(2.0); let result = a * b;",
+                        "includes": [
+                            "gafro::scalar"
+                        ]
+                    }
+                },
+                "tags": [
+                    "arithmetic",
+                    "multiplication"
+                ]
+            }
+        ]
+    }
+}
