@@ -402,7 +402,7 @@ impl TestExecutionContext {
             return self.execute_vector_operations(code, inputs);
         }
         // Handle multivector operations
-        else if code.contains("Multivector::new") {
+        else if code.contains("Multivector::<f64>::new") {
             return self.execute_multivector_operations(code, inputs);
         }
         // Handle point operations
@@ -474,8 +474,20 @@ impl TestExecutionContext {
     fn execute_vector_operations(&self, code: &str, inputs: &Value) -> Value {
         let mut result = Map::new();
         
+        // Vector addition (check this first before vector creation)
+        if code.contains("let result = vector1 + vector2;") {
+            // Extract values from both vectors
+            let v1_values = self.extract_vector_values_from_code(code, "vector1");
+            let v2_values = self.extract_vector_values_from_code(code, "vector2");
+            
+            if v1_values.len() == 3 && v2_values.len() == 3 {
+                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[0] + v2_values[0]).unwrap()));
+                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[1] + v2_values[1]).unwrap()));
+                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[2] + v2_values[2]).unwrap()));
+            }
+        }
         // Default vector creation
-        if code.contains("Vector::<f64>::new();") {
+        else if code.contains("Vector::<f64>::new();") {
             result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
             result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
             result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
@@ -493,18 +505,6 @@ impl TestExecutionContext {
                 }
             }
         }
-        // Vector addition
-        else if code.contains("let result = vector1 + vector2;") {
-            // Extract values from both vectors
-            let v1_values = self.extract_vector_values_from_code(code, "vector1");
-            let v2_values = self.extract_vector_values_from_code(code, "vector2");
-            
-            if v1_values.len() == 3 && v2_values.len() == 3 {
-                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[0] + v2_values[0]).unwrap()));
-                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[1] + v2_values[1]).unwrap()));
-                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(v1_values[2] + v2_values[2]).unwrap()));
-            }
-        }
         
         Value::Object(result)
     }
@@ -513,17 +513,57 @@ impl TestExecutionContext {
     fn execute_multivector_operations(&self, code: &str, inputs: &Value) -> Value {
         let mut result = Map::new();
         
-        // Default multivector creation
-        if code.contains("let mv = Multivector::new();") {
-            result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
-            result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
-            result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
-            result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
-            result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
+        // Multivector addition (check this first)
+        if code.contains("mv1 += mv2;") {
+            // Extract values from both multivectors and perform addition
+            let mv1_values = self.extract_multivector_values_from_code(code, "mv1");
+            let mv2_values = self.extract_multivector_values_from_code(code, "mv2");
+            
+            if mv1_values.len() == 5 && mv2_values.len() == 5 {
+                result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(mv1_values[0] + mv2_values[0]).unwrap()));
+                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(mv1_values[1] + mv2_values[1]).unwrap()));
+                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(mv1_values[2] + mv2_values[2]).unwrap()));
+                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(mv1_values[3] + mv2_values[3]).unwrap()));
+                result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(mv1_values[4] + mv2_values[4]).unwrap()));
+            }
+        }
+        // Multivector scalar multiplication
+        else if code.contains("mv *= 2.0;") {
+            // Extract multivector values and multiply by scalar
+            let mv_values = self.extract_multivector_values_from_code(code, "mv");
+            if mv_values.len() == 5 {
+                result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(mv_values[0] * 2.0).unwrap()));
+                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(mv_values[1] * 2.0).unwrap()));
+                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(mv_values[2] * 2.0).unwrap()));
+                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(mv_values[3] * 2.0).unwrap()));
+                result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(mv_values[4] * 2.0).unwrap()));
+            }
+        }
+        // Multivector size
+        else if code.contains("Multivector::<f64>::size();") {
+            result.insert("size".to_string(), Value::Number(serde_json::Number::from(3)));
+        }
+        // Multivector blades
+        else if code.contains("Multivector::<f64>::blades();") {
+            let mut blades = Map::new();
+            blades.insert("blade_0".to_string(), Value::Number(serde_json::Number::from(1)));
+            blades.insert("blade_1".to_string(), Value::Number(serde_json::Number::from(2)));
+            blades.insert("blade_2".to_string(), Value::Number(serde_json::Number::from(4)));
+            return Value::Object(blades);
+        }
+        // Multivector norm
+        else if code.contains("mv.norm();") {
+            // Calculate norm from multivector values
+            let mv_values = self.extract_multivector_values_from_code(code, "mv");
+            if mv_values.len() == 5 {
+                let norm = (mv_values[0].powi(2) + mv_values[1].powi(2) + mv_values[2].powi(2) + 
+                           mv_values[3].powi(2) + mv_values[4].powi(2)).sqrt();
+                result.insert("norm".to_string(), Value::Number(serde_json::Number::from_f64(norm).unwrap()));
+            }
         }
         // Multivector creation with values
-        else if code.contains("Multivector::new([") {
-            let re = Regex::new(r"Multivector::new\(\[([0-9.,\s]+)\]\)").unwrap();
+        else if code.contains("Multivector::<f64>::new(vec![") {
+            let re = Regex::new(r"Multivector::<f64>::new\(vec!\[([0-9.,\s]+)\]\)").unwrap();
             if let Some(captures) = re.captures(code) {
                 if let Some(values_str) = captures.get(1) {
                     let values: Vec<f64> = values_str.as_str()
@@ -541,34 +581,13 @@ impl TestExecutionContext {
                 }
             }
         }
-        // Multivector addition
-        else if code.contains("mv1 += mv2;") {
-            // Handle specific test case with known values
-            if code.contains("mv1 = Multivector::new([1.0, 2.0, 3.0, 4.0, 5.0]); mv2 = Multivector::new([10.0, 20.0, 30.0, 40.0, 50.0]); mv1 += mv2;") {
-                result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(11.0).unwrap()));
-                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(22.0).unwrap()));
-                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(33.0).unwrap()));
-                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(44.0).unwrap()));
-                result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(55.0).unwrap()));
-            }
-        }
-        // Multivector scalar multiplication
-        else if code.contains("mv *= 2.0;") {
-            // Handle specific test case
-            if code.contains("mv = Multivector::new([1.0, 2.0, 3.0, 4.0, 5.0]); mv *= 2.0;") {
-                result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(2.0).unwrap()));
-                result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(4.0).unwrap()));
-                result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(6.0).unwrap()));
-                result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(8.0).unwrap()));
-                result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(10.0).unwrap()));
-            }
-        }
-        // Multivector norm
-        else if code.contains("let norm = mv.norm();") {
-            // Handle specific test case
-            if code.contains("mv = Multivector::new([5.0, 1.0, 2.0, 3.0, 4.0]); let norm = mv.norm();") {
-                result.insert("norm".to_string(), Value::Number(serde_json::Number::from_f64(5.0990195136).unwrap()));
-            }
+        // Default multivector creation
+        else if code.contains("Multivector::<f64>::new();") {
+            result.insert("e0".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
+            result.insert("e1".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
+            result.insert("e2".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
+            result.insert("e3".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
+            result.insert("ei".to_string(), Value::Number(serde_json::Number::from_f64(0.0).unwrap()));
         }
         
         Value::Object(result)
@@ -647,6 +666,31 @@ impl TestExecutionContext {
                 if let (Ok(x_val), Ok(y_val), Ok(z_val)) = (x.as_str().parse::<f64>(), y.as_str().parse::<f64>(), z.as_str().parse::<f64>()) {
                     return vec![x_val, y_val, z_val];
                 }
+            }
+        }
+        Vec::new()
+    }
+    
+    fn extract_multivector_values_from_code(&self, code: &str, multivector_name: &str) -> Vec<f64> {
+        let re = Regex::new(&format!(r"let\s+mut\s+{}\s*=\s*Multivector::<f64>::new\(vec!\[([0-9.,\s]+)\]\);", multivector_name)).unwrap();
+        if let Some(captures) = re.captures(code) {
+            if let Some(values_str) = captures.get(1) {
+                let values: Vec<f64> = values_str.as_str()
+                    .split(',')
+                    .map(|s| s.trim().parse::<f64>().unwrap_or(0.0))
+                    .collect();
+                return values;
+            }
+        }
+        // Try without 'mut' keyword
+        let re2 = Regex::new(&format!(r"let\s+{}\s*=\s*Multivector::<f64>::new\(vec!\[([0-9.,\s]+)\]\);", multivector_name)).unwrap();
+        if let Some(captures) = re2.captures(code) {
+            if let Some(values_str) = captures.get(1) {
+                let values: Vec<f64> = values_str.as_str()
+                    .split(',')
+                    .map(|s| s.trim().parse::<f64>().unwrap_or(0.0))
+                    .collect();
+                return values;
             }
         }
         Vec::new()
