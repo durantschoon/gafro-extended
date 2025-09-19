@@ -266,6 +266,33 @@
 - [ ] **Implement compile-time unit checking**
 - [ ] **Add unit conversion functions**
 
+### **2.4 Performance Benchmarking** 📋 PENDING
+
+- [ ] **Set up C++ benchmarking infrastructure**
+  - [ ] Integrate Google Benchmark or similar framework
+  - [ ] Create benchmark targets for core operations (vector ops, geometric products)
+  - [ ] Add memory usage profiling
+  - [ ] Set up automated benchmark runs in CI/CD
+
+- [ ] **Set up Rust benchmarking infrastructure**
+  - [ ] Use Criterion.rs for benchmarking
+  - [ ] Create equivalent benchmark targets to C++ version
+  - [ ] Add memory usage profiling with heaptrack
+  - [ ] Set up automated benchmark runs in CI/CD
+
+- [ ] **Cross-language performance comparison**
+  - [ ] Create standardized benchmark suite for both languages
+  - [ ] Implement performance regression detection
+  - [ ] Generate comparative performance reports
+  - [ ] Track performance trends over time
+
+- [ ] **Benchmark categories to implement:**
+  - [ ] **Vector operations**: addition, subtraction, scaling, dot/cross products
+  - [ ] **Geometric products**: outer product, geometric product, multivector operations
+  - [ ] **CGA operations**: point operations, line/plane intersections, transformations
+  - [ ] **Memory allocation**: object creation/destruction, copy/move operations
+  - [ ] **Large-scale operations**: batch processing, matrix operations, optimization algorithms
+
 ## 📋 **Phase 3: Marine Branch Implementation**
 
 ### **3.1 Hydrodynamic Models** 📋 PENDING
