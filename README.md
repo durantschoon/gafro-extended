@@ -35,13 +35,18 @@ mkdir build && cd build
 cmake ..
 make
 
-# Run tests
+# Run tests with pattern matching (Phase 1)
 ./test_runner ../json/algebra/scalar_tests.json
 ./test_runner ../json/algebra/vector_tests.json
 ./test_runner ../json/algebra/multivector_tests.json
 
-# Run with verbose output
-./test_runner -v ../json/algebra/scalar_tests.json
+# Run tests with real GAFRO code execution (Phase 2)
+./test_runner -r ../json/algebra/scalar_tests.json
+./test_runner -r ../json/algebra/vector_tests.json
+./test_runner -r ../json/algebra/multivector_tests.json
+
+# Run with verbose output and real code execution
+./test_runner -r -v ../json/algebra/scalar_tests.json
 
 # Run specific category
 ./test_runner -c scalar_creation ../json/algebra/scalar_tests.json
@@ -70,9 +75,25 @@ cargo run -- ../json/algebra/scalar_tests.json -- -t basic
 
 Current test success rates:
 
+#### Phase 1: Pattern Matching
+
 - **Scalar tests**: 100% (4/4 tests passing) in both C++ and Rust
 - **Vector tests**: 80% (4/5 tests passing) in C++, 60% (3/5 tests passing) in Rust
 - **Multivector tests**: 43% (3/7 tests passing) in C++, pattern matching in progress for Rust
+
+#### Phase 2: Real Code Execution (C++ only)
+
+- **Scalar tests**: 100% (4/4 tests passing) with real GAFRO execution
+- **Vector tests**: 100% (5/5 tests passing) with real GAFRO execution
+- **Cross-platform support**: Windows/Linux/macOS configuration system
+
+### Features
+
+- **Cross-Language Testing**: JSON test specifications work with both C++ and Rust
+- **Real Code Execution**: C++ tests compile and execute actual GAFRO library code
+- **Cross-Platform**: Automatic path detection for Windows, Linux, and macOS
+- **Dependency Detection**: Automatic detection of Eigen3, nlohmann/json, and GAFRO paths
+- **Verbose Output**: Detailed configuration and execution information
 
 For more detailed information about the test infrastructure, see [shared_tests/README.md](shared_tests/README.md).
 

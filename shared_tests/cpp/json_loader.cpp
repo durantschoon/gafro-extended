@@ -1,4 +1,5 @@
 #include "json_loader.hpp"
+#include "real_code_executor.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -272,12 +273,26 @@ void TestExecutionContext::setVerbose(bool verbose) {
     verbose_ = verbose;
 }
 
+void TestExecutionContext::enableRealCodeExecution(bool enable) {
+    if (enable && !real_code_executor_) {
+        real_code_executor_ = std::make_unique<RealCodeExecutor>();
+        real_code_executor_->setVerbose(verbose_);
+    } else if (!enable) {
+        real_code_executor_.reset();
+    }
+}
+
 TestExecutionContext::ExecutionStats TestExecutionContext::getExecutionStats() const {
     return stats_;
 }
 
 json TestExecutionContext::defaultTestExecutor(const TestCase& test_case) {
-    return executeCppCode(test_case.cpp_test_code, test_case.inputs);
+    // Use real code execution if enabled, otherwise fall back to pattern matching
+    if (real_code_executor_) {
+        return real_code_executor_->executeTest(test_case.cpp_test_code, test_case.inputs, test_case.cpp_includes);
+    } else {
+        return executeCppCode(test_case.cpp_test_code, test_case.inputs);
+    }
 }
 
 json TestExecutionContext::executeCppCode(const std::string& code, const json& inputs) {

@@ -13,11 +13,13 @@ void printUsage(const char* program_name) {
     std::cout << "  -t, --tag <tag>   Run only tests with specified tag\n";
     std::cout << "  -c, --category <name>  Run only tests in specified category\n";
     std::cout << "  -s, --stats       Show detailed statistics\n";
+    std::cout << "  -r, --real-code   Enable real GAFRO code execution (Phase 2)\n";
     std::cout << "  -h, --help        Show this help message\n";
     std::cout << "\nExamples:\n";
     std::cout << "  " << program_name << " scalar_tests.json\n";
     std::cout << "  " << program_name << " -v -t basic vector_tests.json\n";
     std::cout << "  " << program_name << " -c vector_creation vector_tests.json\n";
+    std::cout << "  " << program_name << " -r scalar_tests.json  # Real GAFRO execution\n";
 }
 
 void printTestSuiteInfo(const TestSuite& test_suite) {
@@ -91,6 +93,7 @@ int main(int argc, char* argv[]) {
     // Parse command line arguments
     bool verbose = false;
     bool show_stats = false;
+    bool real_code_execution = false;
     std::string filter_tag;
     std::string filter_category;
     std::string test_file;
@@ -105,6 +108,8 @@ int main(int argc, char* argv[]) {
             verbose = true;
         } else if (arg == "-s" || arg == "--stats") {
             show_stats = true;
+        } else if (arg == "-r" || arg == "--real-code") {
+            real_code_execution = true;
         } else if (arg == "-t" || arg == "--tag") {
             if (i + 1 < argc) {
                 filter_tag = argv[++i];
@@ -160,6 +165,14 @@ int main(int argc, char* argv[]) {
     // Set up test execution context
     TestExecutionContext context;
     context.setVerbose(verbose);
+    
+    // Enable real code execution if requested
+    if (real_code_execution) {
+        context.enableRealCodeExecution(true);
+        if (verbose) {
+            std::cout << "🚀 Real GAFRO code execution enabled (Phase 2)\n";
+        }
+    }
     
     // Execute tests based on filters
     std::vector<TestResult> results;

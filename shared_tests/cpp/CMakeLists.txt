@@ -20,6 +20,8 @@ find_package(gafro REQUIRED PATHS ${CMAKE_SOURCE_DIR}/../build)
 # Create the JSON test loader library
 add_library(gafro_json_test_loader
     json_loader.cpp
+    real_code_executor.cpp
+    gafro_test_config.cpp
 )
 
 target_link_libraries(gafro_json_test_loader
@@ -137,6 +139,6 @@ install(TARGETS gafro_json_test_loader test_runner
     RUNTIME DESTINATION bin
 )
 
-install(FILES json_loader.hpp
+install(FILES json_loader.hpp real_code_executor.hpp gafro_test_config.hpp
     DESTINATION include/gafro_test
 )

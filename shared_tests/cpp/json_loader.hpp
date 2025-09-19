@@ -7,6 +7,8 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 
+#include "real_code_executor.hpp"
+
 namespace gafro_test {
 
 using json = nlohmann::json;
@@ -170,6 +172,11 @@ public:
     void setVerbose(bool verbose);
     
     /**
+     * @brief Enable real GAFRO code execution (Phase 2)
+     */
+    void enableRealCodeExecution(bool enable = true);
+    
+    /**
      * @brief Get execution statistics
      */
     struct ExecutionStats {
@@ -185,6 +192,7 @@ private:
     std::function<json(const TestCase&)> test_executor_;
     bool verbose_ = false;
     ExecutionStats stats_;
+    std::unique_ptr<RealCodeExecutor> real_code_executor_;
     
     /**
      * @brief Default test executor that evaluates C++ code
