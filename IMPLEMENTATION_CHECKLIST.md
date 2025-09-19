@@ -9,6 +9,7 @@
 ## 🎯 **Phase 1 Progress: 75% Complete**
 
 ### **✅ Completed (6/8 tasks):**
+
 - ✅ JSON test specification design
 - ✅ Shared test infrastructure
 - ✅ C++ JSON test loader with pattern matching
@@ -17,9 +18,11 @@
 - ✅ Phase 1 milestone committed
 
 ### **🔄 In Progress (1/8 tasks):**
+
 - 🔄 Rust JSON test loader implementation
 
 ### **⏳ Pending (1/8 tasks):**
+
 - ⏳ Cross-language validation
 
 ## 📋 **Phase 1: Foundation & Cross-Language Testing Infrastructure**
@@ -92,7 +95,7 @@
 
 - [x] **Create directory structure**
 
-  ```
+```text
   shared_tests/
   ├── json/
   │   ├── algebra/

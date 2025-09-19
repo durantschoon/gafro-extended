@@ -20,7 +20,7 @@ This directory contains cross-language test specifications for GAFRO Extended, e
 
 ## Directory Structure
 
-```
+```text
 shared_tests/
 ├── json/                          # JSON test specifications
 │   ├── test_schema.json          # JSON schema for test specifications

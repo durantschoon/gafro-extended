@@ -17,7 +17,7 @@ Transform GAFRO into the definitive geometric algebra library for underwater rob
 
 ### **Branch Strategy & Development Model**
 
-```
+```text
 gafro-extended/
 ├── main/                    # Upstream GAFRO alignment
 ├── marine/                  # Underwater robotics extensions
