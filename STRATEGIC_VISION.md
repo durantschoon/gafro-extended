@@ -36,7 +36,9 @@ gafro-extended/
 
 - **Primary**: C++23 with modern type safety and zero-cost abstractions
 - **Secondary**: Rust implementation for memory safety and cross-validation
-- **Shared**: Common test specifications ensuring identical behavior
+- **Shared**: JSON-based test specifications ensuring identical behavior across languages
+- **Cross-Language Validation**: Automated testing to verify identical results between C++ and Rust
+- **Modern Algebraic Types**: Sum types, grade-indexed types, and compile-time type safety in both languages
 
 ## 🌊 **Marine Branch: Underwater Robotics Focus**
 
@@ -157,7 +159,7 @@ struct SwarmState {
 };
 ```
 
-## 🧩 **Modern Types Branch: Type Safety & SI Units**
+## 🧩 **Modern Types Branch: Type Safety, SI Units & Cross-Language Testing**
 
 ### **Compile-Time Type Safety**
 
@@ -190,27 +192,108 @@ auto energy = force * displacement;  // N * m = J (joules)
 auto power = energy / time;          // J / s = W (watts)
 ```
 
+### **Cross-Language Testing Infrastructure**
+
+#### **JSON-Based Test Specifications**
+
+```json
+{
+  "test_suite": "modern_algebraic_types",
+  "scalar_tests": {
+    "basic_scalars": [
+      {"input": 3.14, "expected": 3.14, "description": "basic scalar creation"}
+    ]
+  },
+  "vector_tests": {
+    "basic_vectors": [
+      {"input": [1.0, 2.0, 3.0], "expected": [1.0, 2.0, 3.0], "description": "3D vector creation"}
+    ]
+  },
+  "bivector_tests": {
+    "basic_bivectors": [
+      {"input": {"e12": 1.0, "e23": 2.0}, "expected": {"e12": 1.0, "e23": 2.0}, "description": "bivector creation"}
+    ]
+  },
+  "cross_language_consistency": {
+    "identical_results": [
+      {"operation": "geometric_product", "inputs": ["vector_a", "vector_b"], "tolerance": 1e-10}
+    ]
+  }
+}
+```
+
+#### **Automated Cross-Language Validation**
+
+- **Shared Test Data**: JSON files define test cases for both C++ and Rust
+- **Identical Results**: Automated validation that both implementations produce identical output
+- **Performance Benchmarks**: Cross-language performance comparison
+- **Continuous Integration**: Automated testing on every commit
+
+#### **Modern Algebraic Types Implementation**
+
+##### **C++23 Implementation**
+
+```cpp
+// Sum types using std::variant
+using GATerm = std::variant<
+    Scalar,                                    // 0-vector (scalar)
+    std::vector<std::pair<Index, Scalar>>,     // 1-vector
+    std::vector<std::tuple<Index, Index, Scalar>>, // 2-vector (bivector)
+    std::vector<BladeTerm<Scalar>>             // General multivector
+>;
+
+// Grade-indexed types for compile-time safety
+template<typename T, Grade G>
+struct GradeIndexed {
+    T value;
+    static constexpr Grade grade = G;
+};
+```
+
+##### **Rust Implementation**
+
+```rust
+// Sum types using enum
+pub enum GATerm {
+    Scalar(Scalar),
+    Vector(Vec<(Index, Scalar)>),
+    Bivector(Vec<(Index, Index, Scalar)>),
+    Trivector(Vec<(Index, Index, Index, Scalar)>),
+    Multivector(Vec<BladeTerm<Scalar>>),
+}
+
+// Grade-indexed types with const generics
+pub struct GradeIndexed<T, const G: usize> {
+    pub value: T,
+    _phantom: PhantomData<Grade<G>>,
+}
+```
+
 ### **Cross-Language Consistency**
 
-- **Shared Test Specifications**: JSON-based test data
-- **Identical Results**: C++ and Rust implementations produce same output
-- **Performance Validation**: Benchmarking across languages
+- **Shared Test Specifications**: JSON-based test data ensuring identical behavior
+- **Identical Results**: C++ and Rust implementations produce same output within tolerance
+- **Performance Validation**: Benchmarking across languages to ensure competitive performance
+- **Type Safety**: Compile-time grade checking in both languages
 
 ## 📊 **Implementation Roadmap**
 
 ### **Phase 1: Foundation (Months 1-2)**
 
 - [ ] **Marine Branch**: Basic hydrodynamic models and environment primitives
-- [ ] **Modern Types**: SI unit system and grade-indexed types
-- [ ] **Testing**: Cross-language validation framework
+- [ ] **Modern Types**: SI unit system, grade-indexed types, and sum types
+- [ ] **Cross-Language Testing**: JSON-based test specifications and validation framework
+- [ ] **Rust Implementation**: Basic Rust implementation with identical API to C++
 - [ ] **Documentation**: API documentation with marine examples
 
 ### **Phase 2: Core Extensions (Months 3-4)**
 
 - [ ] **CUDA Branch**: Basic GPU operations and benchmarks
 - [ ] **Swarm Branch**: Formation control algorithms
+- [ ] **Cross-Language Validation**: Automated testing ensuring identical results between C++ and Rust
+- [ ] **Modern Algebraic Types**: Complete sum types and grade-indexed types implementation
 - [ ] **Integration**: ROS2 interfaces and sensor stubs
-- [ ] **Performance**: Optimization and profiling
+- [ ] **Performance**: Optimization and profiling across both languages
 
 ### **Phase 3: Advanced Features (Months 5-6)**
 
@@ -294,10 +377,21 @@ auto power = energy / time;          // J / s = W (watts)
 2. **Type Safety**: Compile-time grade checking and SI unit validation
 3. **Performance**: GPU acceleration for real-time swarm coordination
 4. **Marine Focus**: Specialized algorithms for underwater robotics
-5. **Cross-Language**: Consistent behavior between C++ and Rust
-6. **Testing**: Comprehensive validation with shared specifications
-7. **Documentation**: Complete API documentation with marine examples
-8. **Community**: Open source development with active contribution
+5. **Cross-Language Consistency**: Identical behavior between C++ and Rust with JSON-based testing
+6. **Modern Algebraic Types**: Sum types, grade-indexed types, and compile-time type safety
+7. **Testing**: Comprehensive validation with shared JSON specifications
+8. **Documentation**: Complete API documentation with marine examples
+9. **Community**: Open source development with active contribution
+
+### **Cross-Language Development Workflow**
+
+1. **Design Phase**: Define API in language-agnostic terms
+2. **JSON Test Creation**: Create test cases in JSON format
+3. **C++ Implementation**: Implement features with modern C++23 types
+4. **Rust Implementation**: Implement identical features in Rust
+5. **Validation**: Run cross-language tests to ensure identical results
+6. **Performance**: Benchmark both implementations for competitive performance
+7. **Documentation**: Update documentation with examples in both languages
 
 ## 🎯 **Strategic Advantages**
 
@@ -307,6 +401,9 @@ auto power = energy / time;          // J / s = W (watts)
 - **GPU Acceleration**: 10× performance improvement for swarm algorithms
 - **Type Safety**: Compile-time error prevention and SI unit checking
 - **Modern C++**: Zero-cost abstractions and better developer experience
+- **Cross-Language**: Rust implementation provides memory safety and identical behavior
+- **Modern Algebraic Types**: Sum types and grade-indexed types for better type safety
+- **JSON-Based Testing**: Language-independent test specifications ensuring consistency
 
 ### **Over Custom Solutions**
 
