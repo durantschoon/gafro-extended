@@ -9,24 +9,24 @@
                 "description": "Verify scalar operations produce identical results in C++ and Rust",
                 "category": "identical_results",
                 "inputs": {
-                    "a": 3.14159,
+                    "a": 6.28318,
                     "b": 2.71828
                 },
                 "expected_outputs": {
-                    "addition": 5.85987,
-                    "multiplication": 8.5397342452,
-                    "subtraction": 0.42331
+                    "addition": 9.00146,
+                    "multiplication": 17.0794684904,
+                    "subtraction": 3.56490
                 },
                 "tolerance": 1e-10,
                 "language_specific": {
                     "cpp": {
-                        "test_code": "Scalar<double> a(3.14159); Scalar<double> b(2.71828); auto add = a + b; auto mul = a * b; auto sub = a - b;",
+                        "test_code": "Scalar<double> a(6.28318); Scalar<double> b(2.71828); auto add = a + b; auto mul = a * b; auto sub = a - b;",
                         "includes": [
                             "<gafro/gafro.hpp>"
                         ]
                     },
                     "rust": {
-                        "test_code": "let a = Scalar::<f64>::new(3.14159); let b = Scalar::<f64>::new(2.71828); let add = a + b; let mul = a * b; let sub = a - b;",
+                        "test_code": "let a = Scalar::<f64>::new(6.28318); let b = Scalar::<f64>::new(2.71828); let add = a + b; let mul = a * b; let sub = a - b;",
                         "includes": [
                             "gafro::scalar"
                         ]

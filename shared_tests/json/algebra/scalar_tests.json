@@ -37,21 +37,21 @@
                 "description": "Test scalar creation with specific value",
                 "category": "scalar_creation",
                 "inputs": {
-                    "value": 3.14
+                    "value": 6.28
                 },
                 "expected_outputs": {
-                    "value": 3.14
+                    "value": 6.28
                 },
                 "tolerance": 1e-10,
                 "language_specific": {
                     "cpp": {
-                        "test_code": "Scalar<double> scalar(3.14);",
+                        "test_code": "Scalar<double> scalar(6.28);",
                         "includes": [
                             "<gafro/gafro.hpp>"
                         ]
                     },
                     "rust": {
-                        "test_code": "let scalar = Scalar::<f64>::new(3.14);",
+                        "test_code": "let scalar = Scalar::<f64>::new(6.28);",
                         "includes": [
                             "gafro::scalar"
                         ]
