@@ -2,6 +2,22 @@
 
 This directory contains cross-language test specifications for GAFRO Extended, enabling identical test execution in both C++ and Rust implementations.
 
+## Implementation Phases
+
+### Phase 1: Proof of Concept (Current)
+
+- **Pattern Matching Approach**: Test executors use pattern matching and hardcoded calculations
+- **No Real Code Execution**: Tests validate the JSON specification format and test infrastructure
+- **Fast & Safe**: No compilation or execution of arbitrary code
+- **Purpose**: Validate cross-language testing concept and test specification format
+
+### Phase 2: Real Code Execution (Future)
+
+- **Code Generation**: Convert JSON test specifications to actual C++/Rust code
+- **Compilation & Execution**: Compile and run generated code with real GAFRO libraries
+- **True Validation**: Verify actual GAFRO behavior across languages
+- **Purpose**: Ensure identical behavior between C++ and Rust GAFRO implementations
+
 ## Directory Structure
 
 ```
@@ -60,22 +76,26 @@ Each test case follows this structure:
 ## Test Categories
 
 ### Scalar Tests
+
 - Basic scalar creation and initialization
 - Scalar arithmetic operations (addition, multiplication, etc.)
 - Scalar properties and comparisons
 
 ### Vector Tests
+
 - Vector creation from parameters, other vectors, and multivectors
 - Vector arithmetic operations
 - Vector properties and transformations
 
 ### Multivector Tests
+
 - Multivector creation and initialization
 - Multivector operations (addition, multiplication, geometric product)
 - Multivector properties (norm, dual, inverse)
 - Advanced operations (reverse, normalization)
 
 ### Cross-Language Consistency Tests
+
 - Identical result validation between C++ and Rust
 - Performance benchmark consistency
 - Numerical precision validation
@@ -85,6 +105,7 @@ Each test case follows this structure:
 ### Running Tests
 
 #### C++
+
 ```bash
 cd shared_tests/cpp
 make
@@ -92,6 +113,7 @@ make
 ```
 
 #### Rust
+
 ```bash
 cd shared_tests/rust
 cargo test
@@ -108,6 +130,7 @@ cargo run -- --test-file ../json/algebra/scalar_tests.json
 ## Validation
 
 The test framework ensures:
+
 - **Identical Results**: Same numerical outputs within tolerance
 - **Performance Consistency**: Similar execution times
 - **API Consistency**: Equivalent functionality across languages
@@ -116,11 +139,13 @@ The test framework ensures:
 ## Dependencies
 
 ### C++
+
 - nlohmann/json for JSON parsing
 - Catch2 for test framework
 - GAFRO library
 
 ### Rust
+
 - serde_json for JSON parsing
 - built-in test framework
 - GAFRO Rust crate
@@ -128,6 +153,7 @@ The test framework ensures:
 ## Contributing
 
 When adding new tests:
+
 1. Follow the JSON schema specification
 2. Include both C++ and Rust language-specific code
 3. Add appropriate tags for categorization

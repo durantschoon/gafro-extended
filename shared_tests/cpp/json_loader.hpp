@@ -197,6 +197,31 @@ private:
     json executeCppCode(const std::string& code, const json& inputs);
     
     /**
+     * @brief Execute scalar operations
+     */
+    json executeScalarOperations(const std::string& code, const json& inputs);
+    
+    /**
+     * @brief Execute vector operations
+     */
+    json executeVectorOperations(const std::string& code, const json& inputs);
+    
+    /**
+     * @brief Execute multivector operations
+     */
+    json executeMultivectorOperations(const std::string& code, const json& inputs);
+    
+    /**
+     * @brief Execute point operations
+     */
+    json executePointOperations(const std::string& code, const json& inputs);
+    
+    /**
+     * @brief Execute basic operations (fallback)
+     */
+    json executeBasicOperations(const std::string& code, const json& inputs);
+    
+    /**
      * @brief Compare actual and expected outputs with tolerance
      */
     bool compareOutputs(const json& actual, const json& expected, double tolerance) const;

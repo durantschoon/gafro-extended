@@ -11,8 +11,11 @@ find_package(nlohmann_json REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 # Include directories
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/../src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+# Find GAFRO (it's an INTERFACE library)
+find_package(gafro REQUIRED PATHS ${CMAKE_SOURCE_DIR}/../build)
 
 # Create the JSON test loader library
 add_library(gafro_json_test_loader
@@ -22,7 +25,7 @@ add_library(gafro_json_test_loader
 target_link_libraries(gafro_json_test_loader
     PRIVATE
         nlohmann_json::nlohmann_json
-        gafro
+        gafro::gafro
 )
 
 target_include_directories(gafro_json_test_loader
@@ -35,22 +38,36 @@ add_executable(test_runner
     test_runner.cpp
 )
 
+# Create the example usage executable
+add_executable(example_usage
+    example_usage.cpp
+)
+
 target_link_libraries(test_runner
     PRIVATE
         gafro_json_test_loader
         nlohmann_json::nlohmann_json
-        gafro
+        gafro::gafro
+)
+
+target_link_libraries(example_usage
+    PRIVATE
+        gafro_json_test_loader
+        nlohmann_json::nlohmann_json
+        gafro::gafro
 )
 
 # Compiler-specific options
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(gafro_json_test_loader PRIVATE "-Wall" "-Wextra")
     target_compile_options(test_runner PRIVATE "-Wall" "-Wextra")
+    target_compile_options(example_usage PRIVATE "-Wall" "-Wextra")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(gafro_json_test_loader PRIVATE "-Wall" "-Wextra")
     target_compile_options(test_runner PRIVATE "-Wall" "-Wextra")
+    target_compile_options(example_usage PRIVATE "-Wall" "-Wextra")
 endif()
 
 # Add test targets

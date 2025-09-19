@@ -2,6 +2,28 @@
 
 This directory contains the C++ implementation of the JSON test loader for GAFRO Extended, enabling execution of cross-language test specifications.
 
+## ⚠️ Important: Phase 1 Implementation
+
+**This is currently a Phase 1 proof of concept implementation that uses pattern matching rather than executing real GAFRO code.**
+
+### What it does
+
+- ✅ Loads JSON test specifications
+- ✅ Parses test cases and expected results
+- ✅ Uses pattern matching to simulate GAFRO operations
+- ✅ Compares results with expected outputs
+- ✅ Provides comprehensive test reporting
+
+### What it does NOT do
+
+- ❌ Execute actual GAFRO C++ code
+- ❌ Compile or run generated code
+- ❌ Validate real GAFRO behavior
+
+### Phase 2 Goal
+
+Future implementation will generate actual C++ code from JSON specifications, compile it with GAFRO, and execute it to validate real behavior.
+
 ## Files
 
 - `json_loader.hpp` - Header file with class definitions and interfaces
@@ -195,6 +217,7 @@ struct TestResult {
 ### Output Comparison
 
 Tests are considered passed if:
+
 - Actual outputs match expected outputs within tolerance
 - For numeric values: `|actual - expected| <= tolerance`
 - For objects: All fields match within tolerance
@@ -221,6 +244,7 @@ Tests are considered passed if:
 ### Programmatic Example
 
 See `example_usage.cpp` for a complete example of:
+
 - Loading test suites
 - Filtering tests by tag/category
 - Executing individual tests
@@ -291,6 +315,7 @@ context.setVerbose(true);
 ### Performance
 
 For large test suites, consider:
+
 - Running tests in parallel (future enhancement)
 - Using custom test executors for better performance
 - Filtering tests by tag/category to run subsets

@@ -1,113 +1,183 @@
 {
-  "test_suite": "cross_language_consistency",
-  "version": "1.0",
-  "description": "Tests to ensure identical results between C++ and Rust implementations",
-  "test_categories": {
-    "identical_results": [
-      {
-        "test_name": "scalar_operations_consistency",
-        "description": "Verify scalar operations produce identical results in C++ and Rust",
-        "category": "identical_results",
-        "inputs": {
-          "a": 3.14159,
-          "b": 2.71828
-        },
-        "expected_outputs": {
-          "addition": 5.85987,
-          "multiplication": 8.5397342452,
-          "subtraction": 0.42331
-        },
-        "tolerance": 1e-10,
-        "language_specific": {
-          "cpp": {
-            "test_code": "Scalar<double> a(3.14159); Scalar<double> b(2.71828); auto add = a + b; auto mul = a * b; auto sub = a - b;",
-            "includes": ["<gafro/gafro.hpp>"]
-          },
-          "rust": {
-            "test_code": "let a = Scalar::<f64>::new(3.14159); let b = Scalar::<f64>::new(2.71828); let add = a + b; let mul = a * b; let sub = a - b;",
-            "includes": ["gafro::scalar"]
-          }
-        },
-        "tags": ["consistency", "scalar", "arithmetic"]
-      },
-      {
-        "test_name": "vector_operations_consistency",
-        "description": "Verify vector operations produce identical results in C++ and Rust",
-        "category": "identical_results",
-        "inputs": {
-          "v1": [1.0, 2.0, 3.0],
-          "v2": [4.0, 5.0, 6.0]
-        },
-        "expected_outputs": {
-          "addition": [5.0, 7.0, 9.0],
-          "dot_product": 32.0
-        },
-        "tolerance": 1e-10,
-        "language_specific": {
-          "cpp": {
-            "test_code": "Vector<double> v1(1.0, 2.0, 3.0); Vector<double> v2(4.0, 5.0, 6.0); auto add = v1 + v2; auto dot = v1 | v2;",
-            "includes": ["<gafro/gafro.hpp>"]
-          },
-          "rust": {
-            "test_code": "let v1 = Vector::<f64>::new(1.0, 2.0, 3.0); let v2 = Vector::<f64>::new(4.0, 5.0, 6.0); let add = v1 + v2; let dot = v1.inner_product(v2);",
-            "includes": ["gafro::vector"]
-          }
-        },
-        "tags": ["consistency", "vector", "arithmetic"]
-      },
-      {
-        "test_name": "multivector_operations_consistency",
-        "description": "Verify multivector operations produce identical results in C++ and Rust",
-        "category": "identical_results",
-        "inputs": {
-          "mv1": [1.0, 2.0, 3.0, 4.0, 5.0],
-          "mv2": [2.0, 3.0, 4.0, 5.0, 6.0]
-        },
-        "expected_outputs": {
-          "addition": [3.0, 5.0, 7.0, 9.0, 11.0],
-          "geometric_product": [2.0, 7.0, 14.0, 23.0, 34.0]
-        },
-        "tolerance": 1e-10,
-        "language_specific": {
-          "cpp": {
-            "test_code": "typedef gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> MV; MV mv1({1.0, 2.0, 3.0, 4.0, 5.0}); MV mv2({2.0, 3.0, 4.0, 5.0, 6.0}); auto add = mv1 + mv2; auto gp = mv1 * mv2;",
-            "includes": ["<gafro/gafro.hpp>"]
-          },
-          "rust": {
-            "test_code": "let mv1 = Multivector::<f64>::new(vec![1.0, 2.0, 3.0, 4.0, 5.0]); let mv2 = Multivector::<f64>::new(vec![2.0, 3.0, 4.0, 5.0, 6.0]); let add = mv1 + mv2; let gp = mv1.geometric_product(mv2);",
-            "includes": ["gafro::multivector"]
-          }
-        },
-        "tags": ["consistency", "multivector", "arithmetic"]
-      }
-    ],
-    "performance_consistency": [
-      {
-        "test_name": "performance_benchmark_consistency",
-        "description": "Verify that both implementations have similar performance characteristics",
-        "category": "performance_consistency",
-        "inputs": {
-          "iterations": 10000,
-          "vector_size": 1000
-        },
-        "expected_outputs": {
-          "cpp_time_ms": "< 100",
-          "rust_time_ms": "< 100",
-          "performance_ratio": "< 2.0"
-        },
-        "tolerance": 0.1,
-        "language_specific": {
-          "cpp": {
-            "test_code": "// Performance benchmark code for C++",
-            "includes": ["<gafro/gafro.hpp>", "<chrono>"]
-          },
-          "rust": {
-            "test_code": "// Performance benchmark code for Rust",
-            "includes": ["gafro::vector", "std::time"]
-          }
-        },
-        "tags": ["performance", "benchmark", "consistency"]
-      }
-    ]
-  }
+    "test_suite": "cross_language_consistency",
+    "version": "1.0",
+    "description": "Tests to ensure identical results between C++ and Rust implementations",
+    "test_categories": {
+        "identical_results": [
+            {
+                "test_name": "scalar_operations_consistency",
+                "description": "Verify scalar operations produce identical results in C++ and Rust",
+                "category": "identical_results",
+                "inputs": {
+                    "a": 3.14159,
+                    "b": 2.71828
+                },
+                "expected_outputs": {
+                    "addition": 5.85987,
+                    "multiplication": 8.5397342452,
+                    "subtraction": 0.42331
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Scalar<double> a(3.14159); Scalar<double> b(2.71828); auto add = a + b; auto mul = a * b; auto sub = a - b;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let a = Scalar::<f64>::new(3.14159); let b = Scalar::<f64>::new(2.71828); let add = a + b; let mul = a * b; let sub = a - b;",
+                        "includes": [
+                            "gafro::scalar"
+                        ]
+                    }
+                },
+                "tags": [
+                    "consistency",
+                    "scalar",
+                    "arithmetic"
+                ]
+            },
+            {
+                "test_name": "vector_operations_consistency",
+                "description": "Verify vector operations produce identical results in C++ and Rust",
+                "category": "identical_results",
+                "inputs": {
+                    "v1": [
+                        1.0,
+                        2.0,
+                        3.0
+                    ],
+                    "v2": [
+                        4.0,
+                        5.0,
+                        6.0
+                    ]
+                },
+                "expected_outputs": {
+                    "addition": [
+                        5.0,
+                        7.0,
+                        9.0
+                    ],
+                    "dot_product": 32.0
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "Vector<double> v1(1.0, 2.0, 3.0); Vector<double> v2(4.0, 5.0, 6.0); auto add = v1 + v2; auto dot = v1 | v2;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let v1 = Vector::<f64>::new(1.0, 2.0, 3.0); let v2 = Vector::<f64>::new(4.0, 5.0, 6.0); let add = v1 + v2; let dot = v1.inner_product(v2);",
+                        "includes": [
+                            "gafro::vector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "consistency",
+                    "vector",
+                    "arithmetic"
+                ]
+            },
+            {
+                "test_name": "multivector_operations_consistency",
+                "description": "Verify multivector operations produce identical results in C++ and Rust",
+                "category": "identical_results",
+                "inputs": {
+                    "mv1": [
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0
+                    ],
+                    "mv2": [
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0
+                    ]
+                },
+                "expected_outputs": {
+                    "addition": [
+                        3.0,
+                        5.0,
+                        7.0,
+                        9.0,
+                        11.0
+                    ],
+                    "geometric_product": [
+                        2.0,
+                        7.0,
+                        14.0,
+                        23.0,
+                        34.0
+                    ]
+                },
+                "tolerance": 1e-10,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "typedef gafro::Multivector<double, blades::e0, blades::e1, blades::e2, blades::e3, blades::ei> MV; MV mv1({1.0, 2.0, 3.0, 4.0, 5.0}); MV mv2({2.0, 3.0, 4.0, 5.0, 6.0}); auto add = mv1 + mv2; auto gp = mv1 * mv2;",
+                        "includes": [
+                            "<gafro/gafro.hpp>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "let mv1 = Multivector::<f64>::new(vec![1.0, 2.0, 3.0, 4.0, 5.0]); let mv2 = Multivector::<f64>::new(vec![2.0, 3.0, 4.0, 5.0, 6.0]); let add = mv1 + mv2; let gp = mv1.geometric_product(mv2);",
+                        "includes": [
+                            "gafro::multivector"
+                        ]
+                    }
+                },
+                "tags": [
+                    "consistency",
+                    "multivector",
+                    "arithmetic"
+                ]
+            }
+        ],
+        "performance_consistency": [
+            {
+                "test_name": "performance_benchmark_consistency",
+                "description": "Verify that both implementations have similar performance characteristics",
+                "category": "performance_consistency",
+                "inputs": {
+                    "iterations": 10000,
+                    "vector_size": 1000
+                },
+                "expected_outputs": {
+                    "cpp_time_ms": "< 100",
+                    "rust_time_ms": "< 100",
+                    "performance_ratio": "< 2.0"
+                },
+                "tolerance": 0.1,
+                "language_specific": {
+                    "cpp": {
+                        "test_code": "// Performance benchmark code for C++",
+                        "includes": [
+                            "<gafro/gafro.hpp>",
+                            "<chrono>"
+                        ]
+                    },
+                    "rust": {
+                        "test_code": "// Performance benchmark code for Rust",
+                        "includes": [
+                            "gafro::vector",
+                            "std::time"
+                        ]
+                    }
+                },
+                "tags": [
+                    "performance",
+                    "benchmark",
+                    "consistency"
+                ]
+            }
+        ]
+    }
 }

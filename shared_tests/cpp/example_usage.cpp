@@ -9,7 +9,7 @@ int main() {
     
     // Example 1: Load a test suite from file
     std::cout << "1. Loading test suite from file...\n";
-    auto test_suite = TestSuite::loadFromFile("../json/algebra/scalar_tests.json");
+    auto test_suite = TestSuite::loadFromFile("../../json/algebra/scalar_tests.json");
     
     if (!test_suite) {
         std::cerr << "Failed to load test suite\n";
