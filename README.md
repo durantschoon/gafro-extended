@@ -26,6 +26,46 @@ gafro can be used either standalone or within a catkin workspace. In both cases 
 
 This repository includes cross-language JSON test specifications for validating GAFRO implementations. Tests can be run using both C++ and Rust test runners.
 
+### 🚀 **Quick Start (Recommended)**
+
+For the best developer experience, we recommend using modern command runners:
+
+#### **Just (The Modern Make) - RECOMMENDED**
+
+```bash
+# Install just: cargo install just (or brew install just)
+just help                    # Show all available commands
+just build                   # Build both test runners
+just test-all                # Run all tests (both languages)
+just test-cpp-real           # Run C++ tests with real GAFRO execution
+just test-rust               # Run Rust tests with pattern matching
+just test-scalars            # Run scalar tests only
+just validate                # Cross-language validation
+```
+
+#### **Task Runner (Go-based alternative)**
+
+```bash
+# Install task: go install github.com/go-task/task/v3/cmd/task@latest
+task --list                  # Show all available commands
+task build                   # Build both test runners
+task test-all                # Run all tests
+task test-cpp-real           # Run C++ tests with real GAFRO execution
+```
+
+#### **NPM Scripts (Node.js ecosystem)**
+
+```bash
+npm run build                # Build both test runners
+npm run test:all             # Run all tests
+npm run test:cpp:real        # Run C++ tests with real GAFRO execution
+npm run test:scalars         # Run scalar tests only
+```
+
+### 📋 **Manual Commands**
+
+If you prefer to run commands manually:
+
 ### Running C++ Tests
 
 ```bash
