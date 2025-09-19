@@ -41,25 +41,8 @@ just test-cpp-real           # Run C++ tests with real GAFRO execution
 just test-rust               # Run Rust tests with pattern matching
 just test-scalars            # Run scalar tests only
 just validate                # Cross-language validation
-```
-
-#### **Task Runner (Go-based alternative)**
-
-```bash
-# Install task: go install github.com/go-task/task/v3/cmd/task@latest
-task --list                  # Show all available commands
-task build                   # Build both test runners
-task test-all                # Run all tests
-task test-cpp-real           # Run C++ tests with real GAFRO execution
-```
-
-#### **NPM Scripts (Node.js ecosystem)**
-
-```bash
-npm run build                # Build both test runners
-npm run test:all             # Run all tests
-npm run test:cpp:real        # Run C++ tests with real GAFRO execution
-npm run test:scalars         # Run scalar tests only
+just clean                   # Clean build artifacts
+just dev-setup               # Setup development environment
 ```
 
 ### 📋 **Manual Commands**
