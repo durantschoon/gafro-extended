@@ -7,6 +7,7 @@
 - **Test Categories**: ✅ Identified algebra, optimization, physics, and robots tests
 - **Cross-Platform Support**: ✅ Configuration system for Windows/Linux/macOS
 - **Real Code Execution**: ✅ C++ tests execute actual GAFRO code (Phase 2)
+- **Mathematical Convention**: ✅ Uses τ (tau = 2π) instead of π (pi) for all constants
 
 ## 🎯 **Phase 1 Progress: 100% Complete**
 

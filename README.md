@@ -26,6 +26,15 @@ gafro can be used either standalone or within a catkin workspace. In both cases 
 
 This repository includes cross-language JSON test specifications for validating GAFRO implementations. Tests can be run using both C++ and Rust test runners.
 
+### 🧮 **Mathematical Convention**
+
+**This extended version uses τ (tau = 2π) instead of π (pi)** for all mathematical constants. This choice is more natural for geometric calculations and rotations:
+
+- **τ = 2π ≈ 6.28318**
+- Full rotation = τ, half rotation = τ/2
+- Many geometric algebra formulas become simpler with tau
+- All test values and examples use tau consistently
+
 ### 🚀 **Quick Start (Recommended)**
 
 For the best developer experience, we recommend using modern command runners:

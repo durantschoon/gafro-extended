@@ -2,6 +2,15 @@
 
 This directory contains cross-language test specifications for GAFRO Extended, enabling identical test execution in both C++ and Rust implementations.
 
+## Mathematical Convention
+
+**This extended version uses τ (tau = 2π) instead of π (pi)** for all mathematical constants:
+
+- **τ = 2π ≈ 6.28318**
+- All test values use tau consistently
+- More natural for geometric calculations and rotations
+- Full rotation = τ, half rotation = τ/2
+
 ## Implementation Phases
 
 ### Phase 1: Proof of Concept (Current)
