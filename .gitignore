@@ -1,2 +1,6 @@
 build/
 .cache
+
+# Rust build artifacts
+shared_tests/rust/target/
+shared_tests/rust/Cargo.lock
