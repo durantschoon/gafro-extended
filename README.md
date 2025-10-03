@@ -9,10 +9,12 @@ Please visit <https://gitlab.com/gafro> in order to find the entire *gafro* soft
 
 ## Installation
 
+```sh
  mkdir build && cd build
  cmake ..
  make
  sudo make install
+```
 
 ## Development Setup
 

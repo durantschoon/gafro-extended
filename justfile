@@ -85,6 +85,27 @@ clean:
     @echo "🧹 Cleaning build artifacts..."
     rm -rf shared_tests/cpp/build
     cd shared_tests/rust && cargo clean
+    rm -rf examples/cpp/build
+    rm -rf examples/robotics_applications/build
+    cd examples/rust && cargo clean
+    cd rust_modern && cargo clean
+
+# Clean all build artifacts including main build directory
+clean-all:
+    @echo "🧹 Cleaning ALL build artifacts..."
+    rm -rf build
+    rm -rf shared_tests/cpp/build
+    cd shared_tests/rust && cargo clean
+    rm -rf examples/cpp/build
+    rm -rf examples/robotics_applications/build
+    cd examples/rust && cargo clean
+    cd rust_modern && cargo clean
+    rm -rf .gafro-idris2/build
+    find . -name "*.o" -delete
+    find . -name "*.so" -delete
+    find . -name "*.dylib" -delete
+    find . -name "*.exe" -delete
+    find . -name "*.dll" -delete
 
 # Show help
 help:
@@ -109,6 +130,7 @@ help:
     @echo "🔧 Development:"
     @echo "  just dev-setup     - Setup development environment"
     @echo "  just clean         - Clean build artifacts"
+    @echo "  just clean-all     - Clean ALL build artifacts (including main build/)"
     @echo "  just validate      - Cross-language validation"
     @echo ""
     @echo "💡 Tip: Run 'just' to see all available commands"
