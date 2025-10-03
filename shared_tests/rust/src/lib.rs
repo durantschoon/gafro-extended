@@ -12,6 +12,9 @@
 pub mod json_loader;
 pub mod test_runner;
 pub mod utilities;
+pub mod si_quantity;
+pub mod angle;
+pub mod canonical_output;
 
 // Re-export utilities for easy access
 pub use utilities::*;

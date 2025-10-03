@@ -12,10 +12,14 @@
  * - Time/distance calculation errors
  */
 
+// Import our utilities library
 use std::f64::consts::PI;
 
 // === Mathematical Constants ===
 const TAU: f64 = 2.0 * PI; // τ = 2π
+
+// Import canonical output for consistent formatting
+use gafro_test_runner::canonical_output::{CanonicalOutput, PositionLike};
 
 // === Type-Safe Coordinate Systems ===
 trait Frame {
@@ -70,6 +74,14 @@ impl<F: Frame> TypedPosition<F> {
     }
 }
 
+// Implement PositionLike trait for TypedPosition
+impl<F: Frame> PositionLike for TypedPosition<F> {
+    fn x(&self) -> f64 { self.x }
+    fn y(&self) -> f64 { self.y }
+    fn z(&self) -> f64 { self.z }
+    fn frame_name(&self) -> Option<&'static str> { Some(F::NAME) }
+}
+
 impl<F: Frame> std::ops::Add for TypedPosition<F> {
     type Output = Self;
 
@@ -122,21 +134,45 @@ impl<const M: i32, const L: i32, const T: i32> std::ops::Sub for SIQuantity<M, L
     }
 }
 
-impl<const M1: i32, const L1: i32, const T1: i32, const M2: i32, const L2: i32, const T2: i32>
-    std::ops::Mul<SIQuantity<M2, L2, T2>> for SIQuantity<M1, L1, T1> {
-    type Output = SIQuantity<{M1 + M2}, {L1 + L2}, {T1 + T2}>;
-
-    fn mul(self, other: SIQuantity<M2, L2, T2>) -> Self::Output {
-        SIQuantity::new(self.value * other.value)
+// Simple multiplication and division implementations for demo
+impl<const M: i32, const L: i32, const T: i32> std::ops::Mul<f64> for SIQuantity<M, L, T> {
+    type Output = Self;
+    
+    fn mul(self, scalar: f64) -> Self::Output {
+        Self::new(self.value * scalar)
     }
 }
 
-impl<const M1: i32, const L1: i32, const T1: i32, const M2: i32, const L2: i32, const T2: i32>
-    std::ops::Div<SIQuantity<M2, L2, T2>> for SIQuantity<M1, L1, T1> {
-    type Output = SIQuantity<{M1 - M2}, {L1 - L2}, {T1 - T2}>;
+impl<const M: i32, const L: i32, const T: i32> std::ops::Div<f64> for SIQuantity<M, L, T> {
+    type Output = Self;
+    
+    fn div(self, scalar: f64) -> Self::Output {
+        Self::new(self.value / scalar)
+    }
+}
 
-    fn div(self, other: SIQuantity<M2, L2, T2>) -> Self::Output {
-        SIQuantity::new(self.value / other.value)
+// For this demo, we'll implement specific operations needed
+impl std::ops::Div<Time> for Length {
+    type Output = Velocity;
+    
+    fn div(self, time: Time) -> Self::Output {
+        Velocity::new(self.value / time.value)
+    }
+}
+
+impl std::ops::Div<Velocity> for Length {
+    type Output = Time;
+    
+    fn div(self, velocity: Velocity) -> Self::Output {
+        Time::new(self.value / velocity.value)
+    }
+}
+
+impl std::ops::Mul<Time> for AngularVelocity {
+    type Output = Angle;
+    
+    fn mul(self, time: Time) -> Self::Output {
+        Angle::new(self.value * time.value)
     }
 }
 
@@ -232,68 +268,58 @@ impl AutonomousNavigationDemo {
         println!("{}", "=".repeat(title.len() + 3));
     }
 
-    fn demonstrate_coordinate_frame_safety(&self) {
+    fn demonstrate_coordinate_frame_safety(&self, output: &CanonicalOutput) {
         self.print_section("COORDINATE FRAME TYPE SAFETY");
 
         let world_target = WorldPosition::new(10.0, 5.0, 0.0);
         let robot_sensor_reading = RobotPosition::new(2.0, 1.0, 0.0);
 
-        println!("✓ Current position ({}): ({}, {}, {})",
-                WorldPosition::frame_name(),
-                self.current_position.x, self.current_position.y, self.current_position.z);
-        println!("✓ Target position ({}): ({}, {}, {})",
-                WorldPosition::frame_name(),
-                world_target.x, world_target.y, world_target.z);
-        println!("✓ Sensor reading ({}): ({}, {}, {})",
-                RobotPosition::frame_name(),
-                robot_sensor_reading.x, robot_sensor_reading.y, robot_sensor_reading.z);
+        output.print_position_like("Current position", &self.current_position);
+        output.print_position_like("Target position", &world_target);
+        output.print_position_like("Sensor reading", &robot_sensor_reading);
 
         // This WILL compile - same coordinate frame
         let navigation_vector = world_target - self.current_position;
-        println!("✅ Navigation vector: ({}, {}, {})",
-                navigation_vector.x, navigation_vector.y, navigation_vector.z);
+        println!("✅ Navigation vector: {}", output.position(navigation_vector.x, navigation_vector.y, navigation_vector.z));
 
         // This would NOT compile - different coordinate frames!
         // let invalid_vector = world_target - robot_sensor_reading;  // COMPILE ERROR!
-        println!("🚫 Cannot subtract robot frame from world frame (compile-time prevention)");
+        output.print_warning("Cannot subtract robot frame from world frame (compile-time prevention)");
 
         println!("Frame safety: {} operations verified", WorldPosition::frame_name());
     }
 
-    fn demonstrate_unit_safety(&mut self) {
+    fn demonstrate_unit_safety(&mut self, output: &CanonicalOutput) {
         self.print_section("SI UNIT SYSTEM SAFETY");
 
         let target_distance = meters(8.5);
         let travel_time = seconds(4.0);
         let required_speed = target_distance / travel_time;
 
-        println!("✓ Target distance: {} m", target_distance.value);
-        println!("✓ Travel time: {} s", travel_time.value);
-        println!("✓ Required speed: {} m/s", required_speed.value);
+        output.print_distance("Target distance", target_distance.value, "m");
+        output.print_time("Travel time", travel_time.value);
+        output.print_speed("Required speed", required_speed.value);
 
         // Dimensional analysis verification (compile-time)
-        println!("✅ Speed dimensions: L^{} T^{} (verified at compile time)",
-                Velocity::length_dim(), Velocity::time_dim());
+        output.print_success(&format!("Speed dimensions: L^{} T^{} (verified at compile time)",
+                Velocity::length_dim(), Velocity::time_dim()));
 
         // This would NOT compile - incompatible dimensions!
         // let invalid = target_distance + travel_time;  // COMPILE ERROR!
-        println!("🚫 Cannot add distance to time (compile-time prevention)");
+        output.print_warning("Cannot add distance to time (compile-time prevention)");
 
         self.current_speed = required_speed;
     }
 
-    fn demonstrate_tau_angle_safety(&mut self) {
+    fn demonstrate_tau_angle_safety(&mut self, output: &CanonicalOutput) {
         self.print_section("TAU CONVENTION ANGLE SAFETY");
 
         let target_heading = Angle::from_degrees(90.0);  // Quarter turn
         let heading_error = target_heading - self.current_heading;
 
-        println!("✓ Current heading: {:.1}° ({:.3}τ)",
-                self.current_heading.to_degrees(), self.current_heading.to_tau_fraction());
-        println!("✓ Target heading: {:.1}° ({:.3}τ)",
-                target_heading.to_degrees(), target_heading.to_tau_fraction());
-        println!("✓ Heading error: {:.1}° ({:.3}τ)",
-                heading_error.to_degrees(), heading_error.to_tau_fraction());
+        output.print_angle("Current heading", self.current_heading.to_degrees());
+        output.print_angle("Target heading", target_heading.to_degrees());
+        output.print_angle("Heading error", heading_error.to_degrees());
 
         // Tau makes rotations intuitive
         let quarter_turn = Angle::from_tau_fraction(0.25);
@@ -314,7 +340,7 @@ impl AutonomousNavigationDemo {
         self.current_heading = target_heading;
     }
 
-    fn demonstrate_path_planning(&self) {
+    fn demonstrate_path_planning(&self, output: &CanonicalOutput) {
         self.print_section("TYPE-SAFE PATH PLANNING");
 
         let waypoints = vec![
@@ -332,8 +358,9 @@ impl AutonomousNavigationDemo {
             let segment_distance = previous_point.distance_to(waypoint);
             total_distance += segment_distance;
 
-            println!("  {}. ({}, {}, {}) - segment: {:.1}m",
-                    i + 1, waypoint.x, waypoint.y, waypoint.z, segment_distance);
+            println!("  {}. {} - segment: {}",
+                    i + 1, output.position(waypoint.x, waypoint.y, waypoint.z), 
+                    output.distance(segment_distance, "m"));
 
             previous_point = *waypoint;
         }
@@ -341,25 +368,24 @@ impl AutonomousNavigationDemo {
         let path_length = meters(total_distance);
         let estimated_time = path_length / self.current_speed;
 
-        println!("\n✓ Total path length: {} m", path_length.value);
-        println!("✓ Current speed: {} m/s", self.current_speed.value);
-        println!("✓ Estimated travel time: {} s", estimated_time.value);
+        output.print_distance("Total path length", path_length.value, "m");
+        output.print_speed("Current speed", self.current_speed.value);
+        output.print_time("Estimated travel time", estimated_time.value);
 
         // Type safety ensures correct calculations (compile-time verification)
-        println!("✅ Time calculation dimensionally verified");
+        output.print_success("Time calculation dimensionally verified");
     }
 
-    fn demonstrate_obstacle_avoidance(&mut self) {
+    fn demonstrate_obstacle_avoidance(&mut self, output: &CanonicalOutput) {
         self.print_section("TYPE-SAFE OBSTACLE AVOIDANCE");
 
         let obstacle_position = WorldPosition::new(6.0, 4.0, 0.0);
         let safety_distance = meters(2.0);
         let current_distance = meters(self.current_position.distance_to(&obstacle_position));
 
-        println!("✓ Obstacle position: ({}, {}, {})",
-                obstacle_position.x, obstacle_position.y, obstacle_position.z);
-        println!("✓ Current distance to obstacle: {} m", current_distance.value);
-        println!("✓ Required safety distance: {} m", safety_distance.value);
+        output.print_position_like("Obstacle position", &obstacle_position);
+        output.print_distance("Current distance to obstacle", current_distance.value, "m");
+        output.print_distance("Required safety distance", safety_distance.value, "m");
 
         if current_distance.value < safety_distance.value {
             let avoidance_angle = Angle::from_tau_fraction(0.25);  // 90° turn
@@ -383,7 +409,7 @@ impl AutonomousNavigationDemo {
         println!("   - All units verified at compile time");
     }
 
-    fn demonstrate_sensor_fusion(&mut self) {
+    fn demonstrate_sensor_fusion(&mut self, output: &CanonicalOutput) {
         self.print_section("TYPE-SAFE SENSOR FUSION");
 
         // GPS reading (world frame)
@@ -408,10 +434,10 @@ impl AutonomousNavigationDemo {
 
         // Fuse sensor data with type safety
         let estimated_angular_change = imu_angular_vel * measurement_time;
-        let fused_heading = self.current_heading + Angle::new(estimated_angular_change.value);
+        let fused_heading = self.current_heading + estimated_angular_change;
 
         println!("\nFusion Results:");
-        println!("  Angular change: {} rad", estimated_angular_change.value);
+        println!("  Angular change: {} rad", estimated_angular_change.radians);
         println!("  Fused heading: {:.1}°", fused_heading.to_degrees());
 
         // Type system ensures dimensional correctness (compile-time verification)
@@ -429,15 +455,13 @@ impl AutonomousNavigationDemo {
                 self.current_position.x, self.current_position.y, self.current_position.z);
     }
 
-    fn print_navigation_summary(&self) {
+    fn print_navigation_summary(&self, output: &CanonicalOutput) {
         println!("\n📊 AUTONOMOUS NAVIGATION SUMMARY");
         println!("================================");
         println!("Final robot state:");
-        println!("  Position: ({}, {}, {}) [world frame]",
-                self.current_position.x, self.current_position.y, self.current_position.z);
-        println!("  Heading: {:.1}° ({:.3}τ)",
-                self.current_heading.to_degrees(), self.current_heading.to_tau_fraction());
-        println!("  Speed: {} m/s", self.current_speed.value);
+        output.print_position_like("Position", &self.current_position);
+        output.print_angle("Heading", self.current_heading.to_degrees());
+        output.print_speed("Speed", self.current_speed.value);
 
         println!("\n🏆 Type Safety Achievements:");
         println!("✅ Zero coordinate frame mixing errors");
@@ -453,9 +477,15 @@ impl AutonomousNavigationDemo {
 }
 
 fn main() {
-    println!("🧭 GAFRO EXTENDED - AUTONOMOUS NAVIGATION TYPE SAFETY DEMO (RUST)");
-    println!("====================================================================");
-    println!("Mathematical Convention: τ (tau = 2π) = {}", TAU);
+    // Initialize canonical output with same settings as C++ version
+    let mut output = CanonicalOutput::new();
+    output.set_precision(1, 0, 1, 1, 2);  // position, angle, distance, time, speed
+    output.set_scientific_threshold(100.0);
+    output.set_tau_convention(true);
+    
+    println!("🧭 GAFRO EXTENDED - AUTONOMOUS NAVIGATION TYPE SAFETY DEMO");
+    println!("==========================================================");
+    println!("Mathematical Convention: {}", output.tau_constant());
     println!("Demonstrating Phase 2 Modern Types for autonomous robot navigation.");
 
     // Initialize robot at origin facing east
@@ -464,13 +494,13 @@ fn main() {
 
     let mut demo = AutonomousNavigationDemo::new(start_position, start_heading);
 
-    demo.demonstrate_coordinate_frame_safety();
-    demo.demonstrate_unit_safety();
-    demo.demonstrate_tau_angle_safety();
-    demo.demonstrate_path_planning();
-    demo.demonstrate_obstacle_avoidance();
-    demo.demonstrate_sensor_fusion();
-    demo.print_navigation_summary();
+    demo.demonstrate_coordinate_frame_safety(&output);
+    demo.demonstrate_unit_safety(&mut output);
+    demo.demonstrate_tau_angle_safety(&mut output);
+    demo.demonstrate_path_planning(&output);
+    demo.demonstrate_obstacle_avoidance(&output);
+    demo.demonstrate_sensor_fusion(&mut output);
+    demo.print_navigation_summary(&output);
 
     println!("\n📝 Phase 2 Benefits Demonstrated:");
     println!("1. Coordinate frame type safety prevents mixing world/robot/sensor frames");
@@ -478,6 +508,4 @@ fn main() {
     println!("3. Tau convention makes angle calculations intuitive and clear");
     println!("4. Compile-time checks catch errors before deployment");
     println!("5. Type-safe sensor fusion prevents unit confusion");
-
-    println!("\n🎯 C++/Rust Parity: This demo provides identical functionality to the C++ version!");
 }

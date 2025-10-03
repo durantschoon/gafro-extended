@@ -1,0 +1,12 @@
+[package]
+name = "gafro_robotics_examples"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "main"
+path = "main.rs"
+
+[dependencies]
+# Local path to our utilities
+gafro_test_runner = { path = "../../shared_tests/rust" }

@@ -70,6 +70,24 @@ validate:
     @echo "\nRust Results:"
     cd shared_tests/rust && cargo run -- ../json/algebra/scalar_tests.json | tail -5
 
+# Compare C++ and Rust example outputs
+compare-examples:
+    @echo "🔄 Comparing C++ and Rust example outputs..."
+    ./scripts/compare_examples.sh
+
+# Run individual example comparisons
+compare-autonomous:
+    @echo "🤖 Comparing autonomous navigation demo..."
+    ./scripts/compare_single_example.sh autonomous_navigation
+
+compare-manipulator:
+    @echo "🦾 Comparing robot manipulator demo..."
+    ./scripts/compare_single_example.sh robot_manipulator
+
+compare-sensor:
+    @echo "📡 Comparing sensor calibration demo..."
+    ./scripts/compare_single_example.sh sensor_calibration
+
 # Development helpers
 dev-setup:
     @echo "🛠️  Setting up development environment..."
@@ -132,5 +150,11 @@ help:
     @echo "  just clean         - Clean build artifacts"
     @echo "  just clean-all     - Clean ALL build artifacts (including main build/)"
     @echo "  just validate      - Cross-language validation"
+    @echo ""
+    @echo "🔄 Example Comparison:"
+    @echo "  just compare-examples    - Compare all C++ and Rust examples"
+    @echo "  just compare-autonomous  - Compare autonomous navigation demo"
+    @echo "  just compare-manipulator - Compare robot manipulator demo"
+    @echo "  just compare-sensor      - Compare sensor calibration demo"
     @echo ""
     @echo "💡 Tip: Run 'just' to see all available commands"

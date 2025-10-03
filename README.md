@@ -87,6 +87,38 @@ The `.vscode/c_cpp_properties.json` file contains platform-specific configuratio
    - **Spacemacs**: See [SPACEMACS_SETUP.md](SPACEMACS_SETUP.md)
    - **Vanilla Emacs**: The `.dir-locals.el` file provides automatic configuration
 
+## Examples
+
+GAFRO Extended includes comprehensive examples demonstrating type-safe robotics programming in both C++ and Rust. These examples showcase the canonical output system that ensures identical formatting across languages.
+
+### Quick Start with Examples
+
+```bash
+# Compare C++ and Rust example outputs
+just compare-examples
+
+# Run specific example comparisons
+just compare-autonomous    # Autonomous navigation
+just compare-manipulator   # Robot manipulator  
+just compare-sensor        # Sensor calibration
+```
+
+### Example Features
+
+- **Type-safe coordinate frames** (world, robot, sensor)
+- **SI unit system** with compile-time dimensional analysis
+- **Tau convention** for intuitive angle calculations
+- **Cross-language consistency** with canonical output formatting
+- **Automated validation** to ensure identical C++ and Rust results
+
+### Available Examples
+
+1. **Autonomous Navigation** - Complete navigation system with path planning and obstacle avoidance
+2. **Robot Manipulator** - Forward/inverse kinematics with workspace analysis
+3. **Sensor Calibration** - IMU, LIDAR, and camera calibration with multi-sensor fusion
+
+📖 **For detailed examples documentation, see [examples/README.md](examples/README.md)**
+
 ## Usage
 
 gafro can be used either standalone or within a catkin workspace. In both cases it can be used in a CMakeLists.txt as follows:

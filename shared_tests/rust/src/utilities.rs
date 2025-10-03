@@ -9,15 +9,18 @@
  * for GAFRO Extended development.
  */
 
-pub mod si_quantity;
-pub mod angle;
+// These modules are in the same directory, not in a subdirectory
+// pub mod si_quantity;
+// pub mod angle;
+// pub mod canonical_output;
 
 // Re-export commonly used types and functions
-pub use si_quantity::*;
-pub use angle::*;
+pub use crate::si_quantity::*;
+pub use crate::angle::*;
+pub use crate::canonical_output::*;
 
 // Convenience re-exports
-pub use si_quantity::{
+pub use crate::si_quantity::{
     Dimensionless, Mass, Length, Time, Velocity, Acceleration, 
     Force, Energy, Power, Pressure, Torque
 };

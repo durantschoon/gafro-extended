@@ -13,6 +13,7 @@
 
 #include "SIQuantity.hpp"
 #include "Angle.hpp"
+#include "CanonicalOutput.hpp"
 
 namespace gafro::modern::utilities
 {

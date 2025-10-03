@@ -17,6 +17,7 @@
 #include <vector>
 #include <cmath>
 #include <iomanip>
+#include <gafro/modern/utilities.hpp>
 
 namespace gafro::robotics::navigation {
 
@@ -27,7 +28,7 @@ constexpr double TAU = 6.283185307179586; // 2π
 template<typename Frame>
 struct TypedPosition {
     double x, y, z;
-    static constexpr const char* frame_name = Frame::name;
+    // frame_name is now a static function, not a member variable
 
     TypedPosition(double x_, double y_, double z_) : x(x_), y(y_), z(z_) {}
 
@@ -44,6 +45,10 @@ struct TypedPosition {
         double dy = y - other.y;
         double dz = z - other.z;
         return std::sqrt(dx*dx + dy*dy + dz*dz);
+    }
+    
+    static constexpr const char* frame_name() {
+        return Frame::name;
     }
 };
 
@@ -155,23 +160,20 @@ public:
         auto world_target = WorldPosition(10.0, 5.0, 0.0);
         auto robot_sensor_reading = RobotPosition(2.0, 1.0, 0.0);
 
-        std::cout << "✓ Current position (world): (" << current_position_.x
-                  << ", " << current_position_.y << ", " << current_position_.z << ")\n";
-        std::cout << "✓ Target position (world): (" << world_target.x
-                  << ", " << world_target.y << ", " << world_target.z << ")\n";
-        std::cout << "✓ Sensor reading (robot): (" << robot_sensor_reading.x
-                  << ", " << robot_sensor_reading.y << ", " << robot_sensor_reading.z << ")\n";
+        using namespace gafro::modern::utilities;
+        output::print_position_like("Current position", current_position_);
+        output::print_position_like("Target position", world_target);
+        output::print_position_like("Sensor reading", robot_sensor_reading);
 
         // This WILL compile - same coordinate frame
         auto navigation_vector = world_target - current_position_;
-        std::cout << "✅ Navigation vector: (" << navigation_vector.x
-                  << ", " << navigation_vector.y << ", " << navigation_vector.z << ")\n";
+        std::cout << "✅ Navigation vector: " << output::position(navigation_vector.x, navigation_vector.y, navigation_vector.z) << "\n";
 
         // This would NOT compile - different coordinate frames!
         // auto invalid_vector = world_target - robot_sensor_reading;  // COMPILE ERROR!
         std::cout << "🚫 Cannot subtract robot frame from world frame (compile-time prevention)\n";
 
-        std::cout << "Frame safety: " << WorldPosition::frame_name << " operations verified\n";
+        std::cout << "Frame safety: " << WorldPosition::frame_name() << " operations verified\n";
     }
 
     void demonstrate_unit_safety() {
@@ -274,8 +276,8 @@ public:
         auto safety_distance = meters(2.0);
         auto current_distance = meters(current_position_.distance_to(obstacle_position));
 
-        std::cout << "✓ Obstacle position: (" << obstacle_position.x << ", "
-                  << obstacle_position.y << ", " << obstacle_position.z << ")\n";
+        using namespace gafro::modern::utilities;
+        output::print_position_like("Obstacle position", obstacle_position);
         std::cout << "✓ Current distance to obstacle: " << current_distance.value << " m\n";
         std::cout << "✓ Required safety distance: " << safety_distance.value << " m\n";
 
@@ -352,8 +354,9 @@ public:
         std::cout << "\n📊 AUTONOMOUS NAVIGATION SUMMARY\n";
         std::cout << "================================\n";
         std::cout << "Final robot state:\n";
-        std::cout << "  Position: (" << current_position_.x << ", "
-                  << current_position_.y << ", " << current_position_.z << ") [world frame]\n";
+        std::cout << "  ";
+        using namespace gafro::modern::utilities;
+        output::print_position_like("Position", current_position_);
         std::cout << "  Heading: " << current_heading_.to_degrees() << "° ("
                   << std::setprecision(3) << current_heading_.to_tau_fraction() << "τ)\n";
         std::cout << "  Speed: " << current_speed_.value << " m/s\n";
@@ -374,9 +377,16 @@ public:
 } // namespace gafro::robotics::navigation
 
 int main() {
+    using namespace gafro::modern::utilities;
+    
+    // Configure canonical output for consistent formatting
+    output::set_precision(1, 0, 1, 1, 2);  // position, angle, distance, time, speed
+    output::set_scientific_threshold(100.0);
+    output::set_tau_convention(true);
+    
     std::cout << "🧭 GAFRO EXTENDED - AUTONOMOUS NAVIGATION TYPE SAFETY DEMO\n";
     std::cout << "==========================================================\n";
-    std::cout << "Mathematical Convention: τ (tau = 2π) = " << gafro::robotics::navigation::TAU << "\n";
+    std::cout << "Mathematical Convention: " << output::tau_constant() << "\n";
     std::cout << "Demonstrating Phase 2 Modern Types for autonomous robot navigation.\n";
 
     try {
