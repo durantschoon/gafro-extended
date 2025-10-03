@@ -9,7 +9,7 @@
  * for both C++ and Rust implementations to ensure identical output.
  */
 
-use std::fmt;
+// use std::fmt; // Not currently used
 
 // Trait for types that can be printed as positions
 pub trait PositionLike {
@@ -34,14 +34,44 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            position_precision: 1,
-            angle_precision: 0,
-            distance_precision: 1,
-            time_precision: 1,
-            speed_precision: 2,
-            scientific_threshold: 100.0,
-            use_tau_convention: true,
+            position_precision: Self::get_env_precision("GAFRO_POSITION_PRECISION", 1),
+            angle_precision: Self::get_env_precision("GAFRO_ANGLE_PRECISION", 2),
+            distance_precision: Self::get_env_precision("GAFRO_DISTANCE_PRECISION", 1),
+            time_precision: Self::get_env_precision("GAFRO_TIME_PRECISION", 1),
+            speed_precision: Self::get_env_precision("GAFRO_SPEED_PRECISION", 2),
+            scientific_threshold: Self::get_env_float("GAFRO_SCIENTIFIC_THRESHOLD", 100.0),
+            use_tau_convention: Self::get_env_bool("GAFRO_USE_TAU", true),
         }
+    }
+}
+
+impl Config {
+    /// Get precision from environment variable with fallback
+    fn get_env_precision(env_var: &str, default: usize) -> usize {
+        std::env::var(env_var)
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(default)
+    }
+    
+    /// Get float from environment variable with fallback
+    fn get_env_float(env_var: &str, default: f64) -> f64 {
+        std::env::var(env_var)
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(default)
+    }
+    
+    /// Get boolean from environment variable with fallback
+    fn get_env_bool(env_var: &str, default: bool) -> bool {
+        std::env::var(env_var)
+            .ok()
+            .and_then(|v| match v.to_lowercase().as_str() {
+                "true" | "1" | "yes" | "on" => Some(true),
+                "false" | "0" | "no" | "off" => Some(false),
+                _ => None,
+            })
+            .unwrap_or(default)
     }
 }
 
@@ -131,7 +161,7 @@ impl CanonicalOutput {
     
     /// Convert degrees to tau fraction
     pub fn degrees_to_tau(&self, degrees: f64) -> f64 {
-        degrees * Self::TAU / 360.0
+        degrees / 360.0
     }
     
     /// Convert tau fraction to degrees

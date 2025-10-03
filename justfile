@@ -71,22 +71,28 @@ validate:
     cd shared_tests/rust && cargo run -- ../json/algebra/scalar_tests.json | tail -5
 
 # Compare C++ and Rust example outputs
-compare-examples:
+compare-examples precision="1,2,1,1,2":
     @echo "🔄 Comparing C++ and Rust example outputs..."
-    ./scripts/compare_examples.sh
+    @echo "📊 Using precision settings: {{precision}}"
+    @echo "   Format: position,angle,distance,time,speed"
+    @echo "   Set via: GAFRO_POSITION_PRECISION, GAFRO_ANGLE_PRECISION, etc."
+    ./scripts/compare_examples.sh {{precision}}
 
 # Run individual example comparisons
-compare-autonomous:
+compare-autonomous precision="1,2,1,1,2":
     @echo "🤖 Comparing autonomous navigation demo..."
-    ./scripts/compare_single_example.sh autonomous_navigation
+    @echo "📊 Using precision settings: {{precision}}"
+    ./scripts/compare_single_example.sh autonomous_navigation {{precision}}
 
-compare-manipulator:
+compare-manipulator precision="1,2,1,1,2":
     @echo "🦾 Comparing robot manipulator demo..."
-    ./scripts/compare_single_example.sh robot_manipulator
+    @echo "📊 Using precision settings: {{precision}}"
+    ./scripts/compare_single_example.sh robot_manipulator {{precision}}
 
-compare-sensor:
+compare-sensor precision="1,2,1,1,2":
     @echo "📡 Comparing sensor calibration demo..."
-    ./scripts/compare_single_example.sh sensor_calibration
+    @echo "📊 Using precision settings: {{precision}}"
+    ./scripts/compare_single_example.sh sensor_calibration {{precision}}
 
 # Development helpers
 dev-setup:

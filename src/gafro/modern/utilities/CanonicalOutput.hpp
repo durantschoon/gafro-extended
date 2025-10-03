@@ -12,6 +12,10 @@
 #include <tuple>
 #include <type_traits>
 #include <concepts>
+#include <cstdlib>
+#include <cstring>
+#include <algorithm>
+#include <cctype>
 
 // Concept for types that can be printed as positions
 template<typename T>
@@ -31,17 +35,44 @@ namespace gafro::modern::utilities
      * for both C++ and Rust implementations to ensure identical output.
      */
     
+    // Helper functions for environment variable parsing
+    inline int get_env_int(const char* env_var, int default_value) {
+        const char* value = std::getenv(env_var);
+        if (value) {
+            char* end;
+            long result = std::strtol(value, &end, 10);
+            if (end != value && *end == '\0') {
+                return static_cast<int>(result);
+            }
+        }
+        return default_value;
+    }
+    
+    inline bool get_env_bool(const char* env_var, bool default_value) {
+        const char* value = std::getenv(env_var);
+        if (value) {
+            std::string lower_value = value;
+            std::transform(lower_value.begin(), lower_value.end(), lower_value.begin(), ::tolower);
+            if (lower_value == "true" || lower_value == "1" || lower_value == "yes" || lower_value == "on") {
+                return true;
+            } else if (lower_value == "false" || lower_value == "0" || lower_value == "no" || lower_value == "off") {
+                return false;
+            }
+        }
+        return default_value;
+    }
+    
     class CanonicalOutput {
     public:
         // Configuration for output precision and formatting
         struct Config {
-            int position_precision = 1;      // Decimal places for positions
-            int angle_precision = 0;         // Decimal places for angles
-            int distance_precision = 1;      // Decimal places for distances
-            int time_precision = 1;          // Decimal places for time
-            int speed_precision = 2;         // Decimal places for speed
-            int scientific_threshold = 100;  // Use scientific notation above this
-            bool use_tau_convention = true;  // Use τ instead of π
+            int position_precision = get_env_int("GAFRO_POSITION_PRECISION", 1);      // Decimal places for positions
+            int angle_precision = get_env_int("GAFRO_ANGLE_PRECISION", 2);         // Decimal places for angles
+            int distance_precision = get_env_int("GAFRO_DISTANCE_PRECISION", 1);      // Decimal places for distances
+            int time_precision = get_env_int("GAFRO_TIME_PRECISION", 1);          // Decimal places for time
+            int speed_precision = get_env_int("GAFRO_SPEED_PRECISION", 2);         // Decimal places for speed
+            int scientific_threshold = get_env_int("GAFRO_SCIENTIFIC_THRESHOLD", 100);  // Use scientific notation above this
+            bool use_tau_convention = get_env_bool("GAFRO_USE_TAU", true);  // Use τ instead of π
         };
         
         static Config& config() {

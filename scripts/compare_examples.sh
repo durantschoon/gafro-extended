@@ -2,8 +2,29 @@
 
 # GAFRO Extended - Cross-Language Example Comparison Script
 # This script runs C++ and Rust examples and compares their outputs
+# Usage: ./compare_examples.sh [precision_settings]
+# Precision format: "position,angle,distance,time,speed" (e.g., "1,2,1,1,2")
 
 set -e
+
+# Parse precision settings
+PRECISION_SETTINGS="$1"
+
+# Set default precision if not provided
+if [ -z "$PRECISION_SETTINGS" ]; then
+    PRECISION_SETTINGS="1,2,1,1,2"
+fi
+
+# Parse precision settings and set environment variables
+IFS=',' read -r POS_PREC ANGLE_PREC DIST_PREC TIME_PREC SPEED_PREC <<< "$PRECISION_SETTINGS"
+
+export GAFRO_POSITION_PRECISION="$POS_PREC"
+export GAFRO_ANGLE_PRECISION="$ANGLE_PREC"
+export GAFRO_DISTANCE_PRECISION="$DIST_PREC"
+export GAFRO_TIME_PRECISION="$TIME_PREC"
+export GAFRO_SPEED_PRECISION="$SPEED_PREC"
+export GAFRO_SCIENTIFIC_THRESHOLD="100"
+export GAFRO_USE_TAU="true"
 
 # Colors for output
 RED='\033[0;31m'

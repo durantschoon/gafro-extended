@@ -1,9 +1,30 @@
 #!/bin/bash
 
 # GAFRO Extended - Single Example Comparison Script
-# Usage: ./compare_single_example.sh <example_name>
+# Usage: ./compare_single_example.sh <example_name> [precision_settings]
+# Precision format: "position,angle,distance,time,speed" (e.g., "1,2,1,1,2")
 
 set -e
+
+# Parse arguments
+EXAMPLE_NAME="$1"
+PRECISION_SETTINGS="$2"
+
+# Set default precision if not provided
+if [ -z "$PRECISION_SETTINGS" ]; then
+    PRECISION_SETTINGS="1,2,1,1,2"
+fi
+
+# Parse precision settings and set environment variables
+IFS=',' read -r POS_PREC ANGLE_PREC DIST_PREC TIME_PREC SPEED_PREC <<< "$PRECISION_SETTINGS"
+
+export GAFRO_POSITION_PRECISION="$POS_PREC"
+export GAFRO_ANGLE_PRECISION="$ANGLE_PREC"
+export GAFRO_DISTANCE_PRECISION="$DIST_PREC"
+export GAFRO_TIME_PRECISION="$TIME_PREC"
+export GAFRO_SPEED_PRECISION="$SPEED_PREC"
+export GAFRO_SCIENTIFIC_THRESHOLD="100"
+export GAFRO_USE_TAU="true"
 
 # Colors for output
 RED='\033[0;31m'
@@ -29,8 +50,8 @@ print_error() {
 normalize_output() {
     local file="$1"
     # With canonical output libraries, no normalization needed
-    # Just remove any compilation warnings that might leak through
-    sed '/warning:/d; /error:/d; /Compiling/d; /Finished/d; /Running/d' "$file"
+    # Just remove any compilation warnings and Cargo output that might leak through
+    sed '/warning:/d; /error:/d; /Compiling/d; /Finished/d; /Running/d; /Updating crates.io index/d; /Locking.*packages/d; /^[[:space:]]*-->/d; /^[[:space:]]*|/d; /^[[:space:]]*=/d; /^[[:space:]]*note:/d; /^[[:space:]]*help:/d' "$file"
 }
 
 # Function to run C++ example

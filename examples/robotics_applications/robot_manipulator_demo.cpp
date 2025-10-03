@@ -190,11 +190,12 @@ public:
 
         // Set default joint limits
         for (size_t i = 0; i < link_lengths_.size(); ++i) {
-            JointLimits limits;
-            limits.min_angle = degrees(-180);
-            limits.max_angle = degrees(180);
-            limits.max_velocity = radians(TAU/4.0 / seconds(1.0).value());
-            limits.max_torque = newton_meters(100.0);
+            JointLimits limits{
+                degrees(-180),  // min_angle
+                degrees(180),   // max_angle
+                AngularVelocity(TAU/4.0),  // max_velocity
+                newton_meters(100.0)  // max_torque
+            };
             joint_limits_.push_back(limits);
         }
     }

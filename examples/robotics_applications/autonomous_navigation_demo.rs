@@ -44,6 +44,9 @@ impl Frame for SensorFrame {
     const NAME: &'static str = "sensor";
 }
 
+// Allow dead code for demo purposes
+#[allow(dead_code)]
+
 #[derive(Debug, Clone, Copy)]
 struct TypedPosition<F: Frame> {
     x: f64,
@@ -113,8 +116,11 @@ impl<const M: i32, const L: i32, const T: i32> SIQuantity<M, L, T> {
         Self { value }
     }
 
+    #[allow(dead_code)]
     fn mass_dim() -> i32 { M }
+    #[allow(dead_code)]
     fn length_dim() -> i32 { L }
+    #[allow(dead_code)]
     fn time_dim() -> i32 { T }
 }
 
@@ -221,6 +227,7 @@ impl Angle {
         self.radians * 360.0 / TAU
     }
 
+    #[allow(dead_code)]
     fn to_tau_fraction(&self) -> f64 {
         self.radians / TAU
     }
@@ -409,7 +416,7 @@ impl AutonomousNavigationDemo {
         println!("   - All units verified at compile time");
     }
 
-    fn demonstrate_sensor_fusion(&mut self, output: &CanonicalOutput) {
+    fn demonstrate_sensor_fusion(&mut self, _output: &CanonicalOutput) {
         self.print_section("TYPE-SAFE SENSOR FUSION");
 
         // GPS reading (world frame)
@@ -479,7 +486,8 @@ impl AutonomousNavigationDemo {
 fn main() {
     // Initialize canonical output with same settings as C++ version
     let mut output = CanonicalOutput::new();
-    output.set_precision(1, 0, 1, 1, 2);  // position, angle, distance, time, speed
+    // Precision settings now come from environment variables:
+    // GAFRO_POSITION_PRECISION, GAFRO_ANGLE_PRECISION, etc.
     output.set_scientific_threshold(100.0);
     output.set_tau_convention(true);
     

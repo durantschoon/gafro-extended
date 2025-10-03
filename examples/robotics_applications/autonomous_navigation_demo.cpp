@@ -183,9 +183,10 @@ public:
         auto travel_time = seconds(4.0);
         auto required_speed = target_distance / travel_time;
 
-        std::cout << "✓ Target distance: " << target_distance.value << " m\n";
-        std::cout << "✓ Travel time: " << travel_time.value << " s\n";
-        std::cout << "✓ Required speed: " << required_speed.value << " m/s\n";
+        using namespace gafro::modern::utilities;
+        output::print_distance("Target distance", target_distance.value, "m");
+        output::print_time("Travel time", travel_time.value);
+        output::print_speed("Required speed", required_speed.value);
 
         // Dimensional analysis verification
         static_assert(decltype(required_speed)::length_dim == 1, "Speed length dimension");
@@ -250,9 +251,9 @@ public:
             auto segment_distance = previous_point.distance_to(waypoints[i]);
             total_distance += segment_distance;
 
-            std::cout << "  " << (i+1) << ". (" << waypoints[i].x << ", "
-                      << waypoints[i].y << ", " << waypoints[i].z
-                      << ") - segment: " << std::setprecision(2) << segment_distance << "m\n";
+            using namespace gafro::modern::utilities;
+            std::cout << "  " << (i+1) << ". " << output::position(waypoints[i].x, waypoints[i].y, waypoints[i].z)
+                      << " - segment: " << output::distance(segment_distance, "m") << "\n";
 
             previous_point = waypoints[i];
         }
@@ -260,9 +261,11 @@ public:
         auto path_length = meters(total_distance);
         auto estimated_time = path_length / current_speed_;
 
-        std::cout << "\n✓ Total path length: " << path_length.value << " m\n";
-        std::cout << "✓ Current speed: " << current_speed_.value << " m/s\n";
-        std::cout << "✓ Estimated travel time: " << estimated_time.value << " s\n";
+        using namespace gafro::modern::utilities;
+        std::cout << "\n";
+        output::print_distance("Total path length", path_length.value, "m");
+        output::print_speed("Current speed", current_speed_.value);
+        output::print_time("Estimated travel time", estimated_time.value);
 
         // Type safety ensures correct calculations
         static_assert(decltype(estimated_time)::time_dim == 1, "Time dimension");
@@ -278,8 +281,8 @@ public:
 
         using namespace gafro::modern::utilities;
         output::print_position_like("Obstacle position", obstacle_position);
-        std::cout << "✓ Current distance to obstacle: " << current_distance.value << " m\n";
-        std::cout << "✓ Required safety distance: " << safety_distance.value << " m\n";
+        output::print_distance("Current distance to obstacle", current_distance.value, "m");
+        output::print_distance("Required safety distance", safety_distance.value, "m");
 
         if (current_distance.value < safety_distance.value) {
             auto avoidance_angle = Angle::from_tau_fraction(0.25);  // 90° turn
@@ -380,7 +383,8 @@ int main() {
     using namespace gafro::modern::utilities;
     
     // Configure canonical output for consistent formatting
-    output::set_precision(1, 0, 1, 1, 2);  // position, angle, distance, time, speed
+    // Precision settings now come from environment variables:
+    // GAFRO_POSITION_PRECISION, GAFRO_ANGLE_PRECISION, etc.
     output::set_scientific_threshold(100.0);
     output::set_tau_convention(true);
     
