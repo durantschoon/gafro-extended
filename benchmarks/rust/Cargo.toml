@@ -1,0 +1,27 @@
+[package]
+name = "gafro_modern_benchmarks"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "benchmark_runner"
+path = "src/main.rs"
+
+[dependencies]
+gafro_modern = { path = "../../rust_modern" }
+criterion = { version = "0.5", features = ["html_reports"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = "0.8"
+
+[profile.release]
+debug = true # Keep debug info for profiling
+lto = true
+codegen-units = 1
+opt-level = 3
+
+[profile.bench]
+debug = true
+lto = true
+codegen-units = 1
+opt-level = 3

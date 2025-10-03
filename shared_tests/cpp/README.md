@@ -49,6 +49,9 @@ sudo apt-get install libeigen3-dev nlohmann-json3-dev
 
 # Install dependencies (macOS with Homebrew)
 brew install eigen nlohmann-json
+
+# Install dependencies (Windows with vcpkg)
+vcpkg install eigen3 nlohmann-json
 ```
 
 ### Build Instructions
@@ -67,6 +70,17 @@ cd build
 cmake ..
 make
 ```
+
+### VS Code Development
+
+This project includes cross-platform VS Code configuration:
+
+1. **Install Extensions**: C/C++ Extension Pack, CMake Tools
+2. **Build the project** to generate `compile_commands.json`
+3. **VS Code automatically detects** the correct platform configuration (Mac/Linux/Windows)
+4. **IntelliSense works** for all headers including `gafro/modern/` types
+
+The `.vscode/c_cpp_properties.json` file provides platform-specific configurations that automatically adapt to your development environment.
 
 ## Usage
 

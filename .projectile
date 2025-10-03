@@ -1,0 +1,41 @@
+# GAFRO Extended - Projectile Configuration
+# This file tells Projectile which files and directories to ignore
+
+# Build directories
+build/
+target/
+cmake-build-*/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Dependencies
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Log files
+*.log
+
+# Include these important directories
++src/
++src/gafro/
++src/gafro/modern/
++src/gafro/algebra/
++src/gafro_control/
++tests/
++shared_tests/
++doc/

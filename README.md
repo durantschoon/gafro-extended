@@ -14,6 +14,77 @@ Please visit <https://gitlab.com/gafro> in order to find the entire *gafro* soft
  make
  sudo make install
 
+## Development Setup
+
+This project supports both VS Code and Emacs (including Spacemacs) for optimal development experience across all platforms, with full support for both C++ and Rust development.
+
+### VS Code Configuration
+
+Cross-platform VS Code configuration with:
+
+- **Cross-Platform Support**: Mac, Linux, and Windows configurations
+- **C++23 Standard**: Full C++23 support with modern features
+- **CMake Integration**: Automatic include path detection via CMake
+- **IntelliSense**: Platform-specific IntelliSense modes for accurate code completion
+
+#### VS Code Prerequisites
+
+1. **Install VS Code Extensions**:
+   - C/C++ Extension Pack
+   - rust-analyzer (Rust language server)
+   - CMake Tools
+   - Just (optional, for command runner)
+
+2. **Build the project** to generate `compile_commands.json`:
+
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
+
+3. **VS Code will automatically**:
+   - Detect the correct platform configuration
+   - Use CMake-generated include paths
+   - Provide accurate IntelliSense for all headers
+
+#### VS Code Platform-Specific Features
+
+- **Mac**: Uses clang++ with macOS frameworks
+- **Linux**: Uses g++ with Linux IntelliSense  
+- **Windows**: Uses MSVC with Windows SDK
+
+The `.vscode/c_cpp_properties.json` file contains platform-specific configurations that automatically adapt to your development environment.
+
+### Emacs Configuration
+
+**For Spacemacs users**: See [SPACEMACS_SETUP.md](SPACEMACS_SETUP.md) for detailed configuration instructions.
+
+**For vanilla Emacs users**: The `.dir-locals.el` file provides project-specific settings that work with any Emacs configuration.
+
+#### Emacs Features
+
+- **LSP Integration**: Language Server Protocol with clangd and rust-analyzer
+- **Auto-completion**: Intelligent C++ and Rust completion
+- **Syntax Checking**: Real-time error detection for both languages
+- **Project Management**: Project navigation and file management
+- **Git Integration**: Version control integration
+- **Code Formatting**: clang-format and rustfmt integration
+
+#### Setup Steps
+
+1. **Build the project** to generate `compile_commands.json`:
+
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
+
+2. **Follow the appropriate setup guide**:
+   - **Spacemacs**: See [SPACEMACS_SETUP.md](SPACEMACS_SETUP.md)
+   - **Vanilla Emacs**: The `.dir-locals.el` file provides automatic configuration
+
 ## Usage
 
 gafro can be used either standalone or within a catkin workspace. In both cases it can be used in a CMakeLists.txt as follows:

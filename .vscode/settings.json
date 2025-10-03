@@ -1,0 +1,40 @@
+{
+  "C_Cpp.default.cppStandard": "c++23",
+  "C_Cpp.default.cStandard": "c17",
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+  "C_Cpp.default.intelliSenseMode": "macos-clang-arm64",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/src",
+    "${workspaceFolder}/src/gafro",
+    "${workspaceFolder}/src/gafro/modern",
+    "${workspaceFolder}/src/gafro/algebra",
+    "${workspaceFolder}/src/gafro_control",
+    "${workspaceFolder}/shared_tests/rust/src"
+  ],
+  "C_Cpp.default.defines": ["GAFRO_EXTENDED", "GAFRO_USE_TAU"],
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.errorSquiggles": "Enabled",
+  "C_Cpp.autocomplete": "Default",
+  "C_Cpp.suggestSnippets": true,
+  "C_Cpp.enhancedColorization": "Enabled",
+  "C_Cpp.vcpkg.enabled": false,
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.configureOnOpen": true,
+  "cmake.generator": "Unix Makefiles",
+  "files.associations": {
+    "*.hpp": "cpp",
+    "*.hxx": "cpp",
+    "*.h": "cpp",
+    "*.cpp": "cpp",
+    "*.cc": "cpp",
+    "*.cxx": "cpp",
+    "*.rs": "rust"
+  },
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "rust-analyzer.checkOnSave.extraArgs": ["--", "-W", "clippy::all"],
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.cargo.buildScripts.enable": true,
+  "rust-analyzer.imports.granularity.group": "module",
+  "rust-analyzer.imports.prefix": "crate"
+}

@@ -1,0 +1,64 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/src/gafro",
+        "${workspaceFolder}/src/gafro/modern",
+        "${workspaceFolder}/src/gafro/algebra",
+        "${workspaceFolder}/src/gafro_control",
+        "${workspaceFolder}/shared_tests/rust/src"
+      ],
+      "defines": ["GAFRO_EXTENDED", "GAFRO_USE_TAU"],
+      "macFrameworkPath": ["/System/Library/Frameworks", "/Library/Frameworks"],
+      "compilerPath": "/usr/bin/clang++",
+      "cStandard": "c17",
+      "cppStandard": "c++23",
+      "intelliSenseMode": "macos-clang-arm64",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+    },
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/src/gafro",
+        "${workspaceFolder}/src/gafro/modern",
+        "${workspaceFolder}/src/gafro/algebra",
+        "${workspaceFolder}/src/gafro_control",
+        "${workspaceFolder}/shared_tests/rust/src"
+      ],
+      "defines": ["GAFRO_EXTENDED", "GAFRO_USE_TAU"],
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "c++23",
+      "intelliSenseMode": "linux-gcc-x64",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+    },
+    {
+      "name": "Win32",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/src/gafro",
+        "${workspaceFolder}/src/gafro/modern",
+        "${workspaceFolder}/src/gafro/algebra",
+        "${workspaceFolder}/src/gafro_control",
+        "${workspaceFolder}/shared_tests/rust/src"
+      ],
+      "defines": ["GAFRO_EXTENDED", "GAFRO_USE_TAU"],
+      "windowsSdkVersion": "10.0.19041.0",
+      "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.37.32822/bin/Hostx64/x64/cl.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++23",
+      "intelliSenseMode": "windows-msvc-x64",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+    }
+  ],
+  "version": 4
+}
