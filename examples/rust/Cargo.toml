@@ -3,6 +3,26 @@ name = "gafro_modern_showcase"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "modern_types_showcase"
+path = "src/main.rs"
+
+[[bin]]
+name = "phase2_validator"
+path = "phase2_validator.rs"
+
+[[bin]]
+name = "autonomous_navigation_demo"
+path = "../robotics_applications/autonomous_navigation_demo.rs"
+
+[[bin]]
+name = "sensor_calibration_demo"
+path = "../robotics_applications/sensor_calibration_demo.rs"
+
+[[bin]]
+name = "robot_manipulator_demo"
+path = "../robotics_applications/robot_manipulator_demo.rs"
+
 [dependencies]
 gafro_modern = { path = "../../rust_modern" }
 serde = { version = "1.0", features = ["derive"] }
